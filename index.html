@@ -1,3 +1,6 @@
+# effectsizecalc.github.io
+This is basically my personal copy of the web page http://www.psychometrica.de/effect_size.html
+
 ## Abhishek Choudhary
 
 Graduate Research Assistant <br />
@@ -8,9 +11,3 @@ Graduate Research Assistant <br />
 Office: Amos Eaton 429 <br />
 Email: <a href="mailto:abhi.achoudhary@gmail.com">Abhishek Choudhary</a> <br />
 
-### Research Interests
-Probability, stochastic processes, mathematical modeling <br />
-Game theory, evolutionary biology <br />
-
-<!-- You can find my CV <a href="http://abhiachoudhary.github.io/docs/CV_Abhishek_Choudhary.pdf">here</a>. <br /> -->
-You can find my CV <a href="https://github.com/abhiachoudhary/abhiachoudhary.github.io/raw/master/docs/CV_Abhishek_Choudhary.pdf">here</a>. <br />
