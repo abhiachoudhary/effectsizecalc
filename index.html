@@ -1,10 +1,2213 @@
-## Abhishek Choudhary
 
-Graduate Research Assistant <br />
-<a href="https://science.rpi.edu/mathematical-sciences">Department of Mathematical Sciences</a><br />
-<a href="http://www.rpi.edu/">Rensselaer Polytechnic Institute</a><br />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
 
-110 8th Street, Troy, NY 12180 <br />
-Office: Amos Eaton 429 <br />
-Email: <a href="mailto:abhi.achoudhary@gmail.com">Abhishek Choudhary</a> <br />
 
+  
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
+
+
+  
+  <meta name="description" content="Online calculator to compute different effect sizes like Cohen's d, d from dependent groups, d for pre-post intervention studies with correction of pre-test differences, effect size from ANOVAs, Odds Ratios, transformation of different effect sizes, pooled standard deviation and interpretation" />
+
+
+  
+  <meta name="keywords" content="effect size, Cohen's d, Glass delta, Hedge's g, calculator, eta square" />
+
+  
+  <meta http-equiv="expires" content="0">
+  
+  
+  <meta name="author" content="Dr. Wolfgang Lenhard" />
+
+  
+  
+  <meta http-equiv="cache-control" content="no-cache" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="css/alex17.css" media="screen,projection" />
+
+  
+  <title>Computation of different effect sizes like d, f, r and transformation of different effect sizes: Psychometrica</title>
+<style>
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.accordion:after {
+  content: '\002B';
+  color: #777;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+</style>
+
+
+  <script src="js/navigation.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+	function cohen1(){
+		var m2 = parseFloat(document.getElementById("m1_cohen").value.replace(",",".")*1.0, 10);
+		var m1 = parseFloat(document.getElementById("m2_cohen").value.replace(",",".")*1.0, 10);
+		
+		var s2 = parseFloat(document.getElementById("s1_cohen").value.replace(",",".")*1.0, 10);
+		var s1 = parseFloat(document.getElementById("s2_cohen").value.replace(",",".")*1.0, 10);
+		
+		if(document.getElementById("m1_cohen").value.length==0||document.getElementById("m2_cohen").value.length==0||document.getElementById("s1_cohen").value.length==0||document.getElementById("s2_cohen").value.length==0){
+			document.getElementById("cohen1").value = "";
+			document.getElementById("cohen1").style.backgroundColor = "#FFAAAA";
+			document.getElementById("glass").value = "";
+			document.getElementById("glass").style.backgroundColor = "#FFAAAA";
+			document.getElementById("cles1").value = "";
+			document.getElementById("cles1").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var s_pol = Math.sqrt(((s1*s1)+(s2*s2))/2);
+		var d = (m1-m2)/s_pol;
+		var Z = Math.abs(m1-m2)/Math.sqrt((s1*s1) + (s2*s2))
+		var pr = cumulativeNormal(Z)
+		
+		document.getElementById("cohen1").value = Math.round(d*1000.0)/1000.0;
+		document.getElementById("cohen1").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("glass").value = Math.round((m1-m2)/s1*1000.0)/1000.0;
+		document.getElementById("glass").style.backgroundColor = "#AAAAFF";
+
+		document.getElementById("cles1").value = Math.round(pr*1000.0)/1000.0;
+		document.getElementById("cles1").style.backgroundColor = "#AAAAFF";
+
+		
+		if(document.getElementById("cohen1_N").value==""){
+			document.getElementById("cohen1_ci").value = "";
+			document.getElementById("cohen1_ci").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var n = parseFloat(document.getElementById("cohen1_N").value.replace(",",".")*1.0, 10);
+		var index = document.getElementById("cohen1_coefficient").value;
+		var se = Math.sqrt((4/n) + ((d*d)/(2*n)));
+		
+		if(index=="---"){
+			document.getElementById("cohen1_ci").value = "";
+			document.getElementById("cohen1_ci").style.backgroundColor = "#FFAAAA";
+		}else if(index=="95"){
+			se = 1.96 * se;
+			document.getElementById("cohen1_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen1_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="90"){
+			se = 1.645 * se;
+			document.getElementById("cohen1_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen1_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="80"){
+			se = 1.282 * se;
+			document.getElementById("cohen1_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen1_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="68"){
+			se = 0.994 * se;
+			document.getElementById("cohen1_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen1_ci").style.backgroundColor = "#AAAAFF";
+		}
+	}
+	
+	function cohen2(){
+		var m2 = parseFloat(document.getElementById("m1_cohen2").value.replace(",",".")*1.0, 10);
+		var m1 = parseFloat(document.getElementById("m2_cohen2").value.replace(",",".")*1.0, 10);
+		
+		var s2 = parseFloat(document.getElementById("s1_cohen2").value.replace(",",".")*1.0, 10);
+		var s1 = parseFloat(document.getElementById("s2_cohen2").value.replace(",",".")*1.0, 10);
+		
+		var n2 = parseFloat(document.getElementById("n1_cohen2").value.replace(",",".")*1.0, 10);
+		var n1 = parseFloat(document.getElementById("n2_cohen2").value.replace(",",".")*1.0, 10);
+		
+		if(document.getElementById("m1_cohen2").value.length==0||document.getElementById("m2_cohen2").value.length==0||document.getElementById("s1_cohen2").value.length==0||document.getElementById("s2_cohen2").value.length==0||document.getElementById("n1_cohen2").value.length==0||document.getElementById("n2_cohen2").value.length==0){
+			document.getElementById("cohen2").value = "";
+			document.getElementById("cohen2").style.backgroundColor = "#FFAAAA";
+			document.getElementById("cohen2_ci").value = "";
+			document.getElementById("cohen2_ci").style.backgroundColor = "#FFAAAA";
+			document.getElementById("cles2").value = "";
+			document.getElementById("cles2").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var s_pol = Math.sqrt((((n1-1)*s1*s1)+((n2-1)*s2*s2))/(n1+n2-2));
+		var d = (m1-m2)/s_pol;
+		var pr = cumulativeNormal(Math.abs(d) / 1.41421356)
+
+		
+		document.getElementById("cohen2").value = Math.round(d*1000.0)/1000.0;
+		document.getElementById("cohen2").style.backgroundColor = "#AAAAFF";
+
+		document.getElementById("cles2").value = Math.round(pr*1000.0)/1000.0;
+		document.getElementById("cles2").style.backgroundColor = "#AAAAFF";
+		
+		var se = Math.sqrt(((n2+n1)/(n2*n1)) + (d*d*.5/(n1+n2)));
+		var index = document.getElementById("cohen2_coefficient").value;
+		
+		if(index=="---"){
+			document.getElementById("cohen2_ci").value = "";
+			document.getElementById("cohen2_ci").style.backgroundColor = "#FFAAAA";
+		}else if(index=="95"){
+			se = 1.96 * se;
+			document.getElementById("cohen2_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen2_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="90"){
+			se = 1.645 * se;
+			document.getElementById("cohen2_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen2_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="80"){
+			se = 1.282 * se;
+			document.getElementById("cohen2_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen2_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="68"){
+			se = 0.994 * se;
+			document.getElementById("cohen2_ci").value = Math.round((d-se)*1000.0)/1000.0 + " - " + Math.round((d+se)*1000.0)/1000.0;
+			document.getElementById("cohen2_ci").style.backgroundColor = "#AAAAFF";
+		}
+	}
+	
+	function repeated(){
+		var m1 = parseFloat(document.getElementById("m1_repeated").value.replace(",",".")*1.0, 10);
+		var m2 = parseFloat(document.getElementById("m2_repeated").value.replace(",",".")*1.0, 10);
+		
+		var s1 = parseFloat(document.getElementById("s1_repeated").value.replace(",",".")*1.0, 10);
+		var s2 = parseFloat(document.getElementById("s2_repeated").value.replace(",",".")*1.0, 10);
+		
+		var r = parseFloat(document.getElementById("r_repeated").value.replace(",",".")*1.0, 10);
+		
+		if(document.getElementById("m1_repeated").value.length==0||document.getElementById("m2_repeated").value.length==0||document.getElementById("s1_repeated").value.length==0||document.getElementById("r_repeated").value.length==0){
+			document.getElementById("d_repeated").value = "";
+			document.getElementById("d_repeated").style.backgroundColor = "#FFAAAA";
+			document.getElementById("dpool_repeated").value = "";
+			document.getElementById("dpool_repeated").style.backgroundColor = "#FFAAAA";
+			document.getElementById("dpool_repeated_ig").value = "";
+			document.getElementById("dpool_repeated_ig").style.backgroundColor = "#FFAAAA";			
+			return;
+		}
+		
+		var drm = ((m2-m1)/s1)/Math.sqrt(2*(1-r));
+		var dig = drm*Math.sqrt(2*(1-r));
+		var s_pol = Math.sqrt(((s1*s1)+(s2*s2))/2);
+		var dpool = ((m2-m1)/s_pol)/Math.sqrt(2*(1-r));
+		document.getElementById("d_repeated").value = Math.round(drm*1000.0)/1000.0;
+		document.getElementById("d_repeated").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("dpool_repeated").value = Math.round(dpool*1000.0)/1000.0;
+		document.getElementById("dpool_repeated").style.backgroundColor = "#AAAAFF";
+
+		document.getElementById("dpool_repeated_ig").value = Math.round(dig*1000.0)/1000.0;
+		document.getElementById("dpool_repeated_ig").style.backgroundColor = "#AAAAFF";
+		
+		if(document.getElementById("repeated_n").value==""){
+			document.getElementById("repeated_ci").value = "";
+			document.getElementById("repeated_ci").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var n = parseFloat(document.getElementById("repeated_n").value.replace(",",".")*1.0, 10) * 2;
+		var index = document.getElementById("repeated_coefficient").value;
+		var se = Math.sqrt((4/n) + ((drm*drm)/(2*n)));
+		
+		if(index=="---"){
+			document.getElementById("repeated_ci").value = "";
+			document.getElementById("repeated_ci").style.backgroundColor = "#FFAAAA";
+		}else if(index=="95"){
+			se = 1.96 * se;
+			document.getElementById("repeated_ci").value = Math.round((drm-se)*1000.0)/1000.0 + " - " + Math.round((drm+se)*1000.0)/1000.0;
+			document.getElementById("repeated_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="90"){
+			se = 1.645 * se;
+			document.getElementById("repeated_ci").value = Math.round((drm-se)*1000.0)/1000.0 + " - " + Math.round((drm+se)*1000.0)/1000.0;
+			document.getElementById("repeated_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="80"){
+			se = 1.282 * se;
+			document.getElementById("repeated_ci").value = Math.round((drm-se)*1000.0)/1000.0 + " - " + Math.round((drm+se)*1000.0)/1000.0;
+			document.getElementById("repeated_ci").style.backgroundColor = "#AAAAFF";
+		} else if(index=="68"){
+			se = 0.994 * se;
+			document.getElementById("repeated_ci").value = Math.round((drm-se)*1000.0)/1000.0 + " - " + Math.round((drm+se)*1000.0)/1000.0;
+			document.getElementById("repeated_ci").style.backgroundColor = "#AAAAFF";
+		}
+	}
+	
+	function beta(){
+		
+		var b = parseFloat(document.getElementById("beta1").value.replace(",",".")*1.0, 10);
+		
+		
+		if(document.getElementById("beta1").value.length==0||document.getElementById("beta1").value.length==0||b<-.5||b>.5){
+			document.getElementById("beta2").value = "";
+			document.getElementById("beta2").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var b2 = b;
+		if(b2 >= 0)
+			b2 = b2 + .05;
+		else
+			b2 = b2 - .05;
+			
+		document.getElementById("beta2").value = Math.round(b2*1000.0)/1000.0;
+		document.getElementById("beta2").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function pool(){
+		var s = [
+			parseFloat(document.getElementById("s1_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s2_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s3_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s4_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s5_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s6_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s7_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s8_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s9_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("s10_pool").value.replace(",",".")*1.0, 10)
+		];
+		
+		var n = [
+			parseFloat(document.getElementById("n1_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n2_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n3_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n4_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n5_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n6_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n7_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n8_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n9_pool").value.replace(",",".")*1.0, 10),
+			parseFloat(document.getElementById("n10_pool").value.replace(",",".")*1.0, 10)
+		];
+		
+		var k = document.getElementById("pool_drop").value;
+		
+		if(k=="---"){
+			k = 2;
+		}
+		
+		//check if computation is based on equal group sizes
+		var useGroup = true;
+		for(var i = 0; i < k; i++){
+			if(!n[i]>1){
+				useGroup = false;			
+			}
+			
+			if(!s[i]>0){
+				document.getElementById("pool").value = "";
+				document.getElementById("pool").style.backgroundColor = "#FFAAAA";
+				return;
+			}
+		}
+		
+		var numerator = 0;
+		var denominator = 0;
+		var s_pool = 0;
+		
+		if(useGroup){
+			for(var i = 0; i < k; i++){
+				numerator = (n[i] - 1) * s[i] * s[i] + numerator;
+				denominator = n[i] + denominator;
+			}
+			
+			s_pool = Math.sqrt(numerator/(denominator - k));
+		}else{
+			for(var i = 0; i < k; i++){
+				numerator = s[i] * s[i] + numerator;
+			}
+			
+			s_pool = Math.sqrt(numerator/k);
+		}	
+
+		document.getElementById("pool").value = Math.round(s_pool*1000.0)/1000.0;
+		document.getElementById("pool").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function displayPool(){
+		var index = document.getElementById("pool_drop").value;
+		if(index=="---"){
+			document.getElementById("pool").value = "";
+			document.getElementById("pool").style.backgroundColor = "#DDDDDD";
+			
+			document.getElementById("n1_pool").value = "";
+			document.getElementById("n2_pool").value = "";
+			document.getElementById("n3_pool").value = "";
+			document.getElementById("n4_pool").value = "";
+			document.getElementById("n5_pool").value = "";
+			document.getElementById("n6_pool").value = "";
+			document.getElementById("n7_pool").value = "";
+			document.getElementById("n8_pool").value = "";
+			document.getElementById("n9_pool").value = "";
+			document.getElementById("n10_pool").value = "";
+			
+			document.getElementById("s1_pool").value = "";
+			document.getElementById("s2_pool").value = "";
+			document.getElementById("s3_pool").value = "";
+			document.getElementById("s4_pool").value = "";
+			document.getElementById("s5_pool").value = "";
+			document.getElementById("s6_pool").value = "";
+			document.getElementById("s7_pool").value = "";
+			document.getElementById("s8_pool").value = "";
+			document.getElementById("s9_pool").value = "";
+			document.getElementById("s10_pool").value = "";	
+
+			index = 2;			
+		}
+		
+		if(index < 10){
+			document.getElementById("pool10").style.display = 'none';
+		}else{
+			document.getElementById("pool10").style.display = '';
+		}
+		
+		if(index < 9){
+			document.getElementById("pool9").style.display = 'none';
+		}else{
+			document.getElementById("pool9").style.display = '';
+		}
+		
+		if(index < 8){
+			document.getElementById("pool8").style.display = 'none';
+		}else{
+			document.getElementById("pool8").style.display = '';
+		}
+		
+		if(index < 7){
+			document.getElementById("pool7").style.display = 'none';
+		}else{
+			document.getElementById("pool7").style.display = '';
+		}		
+		
+		if(index < 6){
+			document.getElementById("pool6").style.display = 'none';
+		}else{
+			document.getElementById("pool6").style.display = '';
+		}
+		
+		if(index < 5){
+			document.getElementById("pool5").style.display = 'none';
+		}else{
+			document.getElementById("pool5").style.display = '';
+		}
+		
+		if(index < 4){
+			document.getElementById("pool4").style.display = 'none';
+		}else{
+			document.getElementById("pool4").style.display = '';
+		}
+		
+		if(index < 3){
+			document.getElementById("pool3").style.display = 'none';
+		}else{
+			document.getElementById("pool3").style.display = '';
+		}
+	}
+	
+	function klauer(){
+		var m1pre = parseFloat(document.getElementById("m1pre_klauer").value.replace(",",".")*1.0, 10);
+		var m1post = parseFloat(document.getElementById("m1post_klauer").value.replace(",",".")*1.0, 10);
+		var m2pre = parseFloat(document.getElementById("m2pre_klauer").value.replace(",",".")*1.0, 10);
+		var m2post = parseFloat(document.getElementById("m2post_klauer").value.replace(",",".")*1.0, 10);
+		
+		var s1pre = parseFloat(document.getElementById("s1pre_klauer").value.replace(",",".")*1.0, 10);
+		var s1post = parseFloat(document.getElementById("s1post_klauer").value.replace(",",".")*1.0, 10);
+		var s2pre = parseFloat(document.getElementById("s2pre_klauer").value.replace(",",".")*1.0, 10);
+		var s2post = parseFloat(document.getElementById("s2post_klauer").value.replace(",",".")*1.0, 10);
+		
+		var n1pre = parseFloat(document.getElementById("n1pre_klauer").value.replace(",",".")*1.0, 10);
+		var n1post = parseFloat(document.getElementById("n1post_klauer").value.replace(",",".")*1.0, 10);
+		var n2pre = parseFloat(document.getElementById("n2pre_klauer").value.replace(",",".")*1.0, 10);
+		var n2post = parseFloat(document.getElementById("n2post_klauer").value.replace(",",".")*1.0, 10);
+		
+
+		if(document.getElementById("m1pre_klauer").value.length==0||document.getElementById("m1post_klauer").value.length==0||document.getElementById("m2pre_klauer").value.length==0||document.getElementById("m2post_klauer").value.length==0||document.getElementById("s1pre_klauer").value.length==0||document.getElementById("s1post_klauer").value.length==0||document.getElementById("s2pre_klauer").value.length==0||document.getElementById("s2post_klauer").value.length==0||document.getElementById("n1pre_klauer").value.length==0||document.getElementById("n1post_klauer").value.length==0||document.getElementById("n2pre_klauer").value.length==0||document.getElementById("n2post_klauer").value.length==0){
+			document.getElementById("klauer").value = "";
+			document.getElementById("klauer").style.backgroundColor = "#FFAAAA";
+			document.getElementById("dppc2").value = "";
+			document.getElementById("dppc2").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var dpost = (m1post-m2post)/Math.sqrt((((n1post-1)*s1post*s1post)+((n2post-1)*s2post*s2post))/(n1post+n2post-2));
+		var dpre = (m1pre-m2pre)/Math.sqrt((((n1pre-1)*s1pre*s1pre)+((n2pre-1)*s2pre*s2pre))/(n1pre+n2pre-2));
+		
+		var cp = 1.0 - (3.0 / (4.0*(n1pre+n2pre-2.0)-1.0));
+		var sdpre = Math.sqrt((((n1pre-1)*s1pre*s1pre)+((n2pre-1)*s2pre*s2pre))/(n1pre+n2pre-2));
+		var dppc2 = cp*(((m1post-m1pre)-(m2post-m2pre))/sdpre);
+		
+		document.getElementById("klauer").value = Math.round((dpost-dpre)*1000.0)/1000.0;
+		document.getElementById("klauer").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("dppc2").value = Math.round(dppc2*1000.0)/1000.0;
+		document.getElementById("dppc2").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function transform2(){
+		var index = document.getElementById("effect_drop2").value;
+		var effect = parseFloat(document.getElementById("effect2").value.replace(",",".")*1.0, 10);
+		var N = parseFloat(document.getElementById("transform2N").value.replace(",",".")*1.0, 10);
+
+		if(document.getElementById("transform2N").value.length==0||document.getElementById("effect2").value.length==0||(index=="---")){
+			document.getElementById("effect_eta2").value = "";
+			document.getElementById("effect_eta2").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_r2").value = "";
+			document.getElementById("effect_r2").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_d2").value = "";
+			document.getElementById("effect_d2").style.backgroundColor = "#FFAAAA";
+
+			return;
+		}
+
+		var d = 0.0;
+		var r = 0.0;
+		var eta = 0.0;
+		
+		if(index=="chi"){
+			r = Math.sqrt(effect/N);
+			d = (2*r)/Math.sqrt(1-(r*r));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+		}else if(index=="z"){
+			r = effect/Math.sqrt(N);
+			d = (2*r)/Math.sqrt(1-(r*r));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+		}
+		
+		document.getElementById("effect_d2").value = Math.round(d*10000.0)/10000.0;
+		document.getElementById("effect_d2").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_r2").value = Math.round(r*10000.0)/10000.0;
+		document.getElementById("effect_r2").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_eta2").value = Math.round(eta*10000.0)/10000.0;
+		document.getElementById("effect_eta2").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function dependendt(){
+	
+		var index = document.getElementById("dependend_drop").value;
+		if(index=="---"){
+			document.getElementById('t_value').disabled = true;
+			document.getElementById('t_n1').disabled = true;
+			document.getElementById('t_n2').disabled = true;
+			document.getElementById('t_r').disabled = true;
+			document.getElementById("d_dependend").value = "";
+			document.getElementById("d_dependend").style.backgroundColor = "#FFFFFF";
+			document.getElementById("r_dependend").value = "";
+			document.getElementById("r_dependend").style.backgroundColor = "#FFFFFF";
+			return;
+		}else if(index=="dependent"){
+			document.getElementById('t_value').disabled = false;
+			document.getElementById('t_n1').disabled = false;
+			document.getElementById('t_n2').disabled = true;
+			document.getElementById('t_r').disabled = false;	
+
+			var t = parseFloat(document.getElementById("t_value").value.replace(",",".")*1.0, 10);
+			var n1 = parseFloat(document.getElementById("t_n1").value.replace(",",".")*1.0, 10);
+			var r = parseFloat(document.getElementById("t_r").value.replace(",",".")*1.0, 10);
+		
+			if(document.getElementById("t_value").value.length==0||document.getElementById("t_n1").value.length==0||document.getElementById("t_r").value.length==0){
+				document.getElementById("d_dependend").value = "";
+				document.getElementById("d_dependend").style.backgroundColor = "#FFAAAA";
+				return;
+			}
+		
+			var d = t * Math.sqrt(2.0*(1.0-r)/n1);
+			
+			document.getElementById("d_dependend").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("d_dependend").style.backgroundColor = "#AAAAFF";			
+		}else if(index=="independent"){
+			document.getElementById('t_value').disabled = false;
+			document.getElementById('t_n1').disabled = false;
+			document.getElementById('t_n2').disabled = false;
+			document.getElementById('t_r').disabled = true;
+
+			var t = parseFloat(document.getElementById("t_value").value.replace(",",".")*1.0, 10);
+			var n1 = parseFloat(document.getElementById("t_n1").value.replace(",",".")*1.0, 10);
+			var n2 = parseFloat(document.getElementById("t_n2").value.replace(",",".")*1.0, 10);
+		
+			if(document.getElementById("t_value").value.length==0||document.getElementById("t_n1").value.length==0||document.getElementById("t_n2").value.length==0){
+				document.getElementById("d_dependend").value = "";
+				document.getElementById("d_dependend").style.backgroundColor = "#FFAAAA";
+				return;
+			}
+		
+			var d = t * Math.sqrt((n1+n2)/(n1*n2));
+			
+			document.getElementById("d_dependend").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("d_dependend").style.backgroundColor = "#AAAAFF";
+		}
+		
+
+	}
+	
+	
+	function transform(){
+		var index = document.getElementById("effect_drop").value;
+		var effect = parseFloat(document.getElementById("effect").value.replace(",",".")*1.0, 10);
+
+		if(document.getElementById("effect").value.length==0||(index=="---")){
+			document.getElementById("effect_eta").value = "";
+			document.getElementById("effect_eta").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_r").value = "";
+			document.getElementById("effect_r").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_d").value = "";
+			document.getElementById("effect_d").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_f").value = "";
+			document.getElementById("effect_f").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("effect_odd").value = "";
+			document.getElementById("effect_odd").style.backgroundColor = "#FFAAAA";
+						
+			document.getElementById("effect_nnt").value = "";
+			document.getElementById("effect_nnt").style.backgroundColor = "#FFAAAA";
+			
+			return;
+		}
+
+		var d = 0.0;
+		var r = 0.0;
+		var eta = 0.0;
+		var f = 0.0;
+		var odd = 0.0;
+		var nnt = 0.0;
+		
+		if(index=="d"){
+			d = effect;
+			r = Math.sqrt((d*d)/((d*d)+4));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+			f = d*0.5;
+			odd = Math.exp(d*Math.PI/1.732050808);
+		}else if(index=="r"){
+			r = effect;
+			d = (2*r)/Math.sqrt(1-(r*r));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+			f = d*0.5;
+			odd = Math.exp(d*Math.PI/1.732050808);
+		}else if(index=="eta"){
+			eta = effect;
+			var tmp = Math.sqrt(eta/(1-eta));
+			d = tmp*2;
+			r = Math.sqrt((d*d)/((d*d)+4));
+			f = d*0.5;
+			odd = Math.exp(d*Math.PI/1.732050808);
+		}else if(index=="f"){
+			f = effect;
+			d = effect*2.0;
+			r = Math.sqrt((d*d)/((d*d)+4));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+			odd = Math.exp(d*Math.PI/1.732050808);
+		}else if(index=="odd"){
+			odd = effect;
+			d = Math.log(odd)*0.551328895;
+			r = Math.sqrt((d*d)/((d*d)+4));
+			var tmp = d / 2.0;
+			eta = (tmp*tmp)/(1+(tmp*tmp));
+			f = d*0.5;
+		}
+		var cles = (Math.asin(r) / Math.PI) + .5
+		
+		nnt = 1.0/((2.0 * cumulativeNormal(d/1.414213))-1.0);
+		
+				
+		
+		document.getElementById("effect_d").value = Math.round(d*10000.0)/10000.0;
+		document.getElementById("effect_d").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_r").value = Math.round(r*10000.0)/10000.0;
+		document.getElementById("effect_r").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_eta").value = Math.round(eta*10000.0)/10000.0;
+		document.getElementById("effect_eta").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_f").value = Math.round(f*10000.0)/10000.0;
+		document.getElementById("effect_f").style.backgroundColor = "#AAAAFF";
+		document.getElementById("effect_odd").value = Math.round(odd*10000.0)/10000.0;
+		document.getElementById("effect_odd").style.backgroundColor = "#AAAAFF";
+		document.getElementById("cles3").value = Math.round(cles*100.0)/100.0;
+		document.getElementById("cles3").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("effect_nnt").value = Math.round(nnt*10000.0)/10000.0;
+		document.getElementById("effect_nnt").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function cohen3(){
+		var n1 = parseFloat(document.getElementById("n1_f").value.replace(",",".")*1.0, 10);
+		var n2 = parseFloat(document.getElementById("n2_f").value.replace(",",".")*1.0, 10);
+		var f = parseFloat(document.getElementById("f").value.replace(",",".")*1.0, 10);
+		
+		
+		
+		if(document.getElementById("n1_f").value.length==0||document.getElementById("n2_f").value.length==0||document.getElementById("f").value.length==0){
+			document.getElementById("cohenf").value = "";
+			document.getElementById("cohenf").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var d = Math.sqrt(f*((n1+n2)/(n1*n2))*((n1+n2)/(n1+n2-2)));
+
+		document.getElementById("cohenf").value = Math.round(d*1000.0)/1000.0;
+		document.getElementById("cohenf").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function anova(){
+		var index = document.getElementById("anova_drop").value;
+		var min = parseFloat(document.getElementById("anovamin").value.replace(",",".")*1.0, 10);
+		var max = parseFloat(document.getElementById("anovamax").value.replace(",",".")*1.0, 10);
+		var k = parseFloat(document.getElementById("anovak").value.replace(",",".")*1.0, 10);
+		var std = parseFloat(document.getElementById("anovastd").value.replace(",",".")*1.0, 10);
+		var stdall = parseFloat(document.getElementById("anovastdall").value.replace(",",".")*1.0, 10);
+		
+		if(document.getElementById("anovamin").value.length==0||document.getElementById("anovamax").value.length==0||document.getElementById("anovak").value.length==0||document.getElementById("anovastd").value.length==0||document.getElementById("anovastdall").value.length==0||(index=="---")){
+			document.getElementById("anovad").value = "";
+			document.getElementById("anovad").style.backgroundColor = "#FFAAAA";
+			document.getElementById("anovaf").value = "";
+			document.getElementById("anovaf").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var f = 0;
+		var d = (max-min)/stdall;
+		
+	
+		if(index=="minimum"){
+			f = d*Math.sqrt(1/(2*k));
+		}else if(index=="intermediate"){
+			f = 0.5*d*Math.sqrt((k+1)/(3*(k-1)));
+		}else if(index=="maximum"){
+			if(k % 2==0){
+				f = 0.5*d;
+			}else{
+				f = d*Math.sqrt(((k*k)-1))/(2*k);
+			}
+		}
+		
+		document.getElementById("anovaf").value = Math.round(f*1000.0)/1000.0;
+		document.getElementById("anovaf").style.backgroundColor = "#AAAAFF";
+		document.getElementById("anovad").value = Math.round(d*1000.0)/1000.0;
+		document.getElementById("anovad").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function cohenq(){
+		var r1 = parseFloat(document.getElementById("r1_q").value.replace(",",".")*1.0, 10);
+		var r2 = parseFloat(document.getElementById("r2_q").value.replace(",",".")*1.0, 10);
+		
+		if(document.getElementById("r1_q").value.length==0||document.getElementById("r2_q").value.length==0){
+			document.getElementById("cohenq").value = "";
+			document.getElementById("cohenq").style.backgroundColor = "#FFAAAA";
+			document.getElementById("interpretationq").value = "";
+			document.getElementById("interpretationq").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var q = (.5*Math.log((1+r1)/(1-r1)))-(.5*Math.log((1+r2)/(1-r2)));
+		
+		document.getElementById("cohenq").value = Math.round(Math.abs(q)*1000.0)/1000.0;
+		document.getElementById("cohenq").style.backgroundColor = "#AAAAFF";
+		
+		if(Math.abs(q)<.1)
+			document.getElementById("interpretationq").value = "no effect";
+		else if(Math.abs(q)<.3)
+			document.getElementById("interpretationq").value = "small effect";
+		else if(Math.abs(q)<.5)
+			document.getElementById("interpretationq").value = "medium effect";
+		else if(Math.abs(q)>=.5)
+			document.getElementById("interpretationq").value = "large effect";
+		else
+			document.getElementById("interpretationq").value = "";
+		document.getElementById("interpretationq").style.backgroundColor = "#AAAAFF";
+		
+	}
+
+	function besd(){
+		
+		var besd1a = parseFloat(document.getElementById("besd1a").value.replace(",",".")*1.0, 10);
+		var besd1b = parseFloat(document.getElementById("besd1b").value.replace(",",".")*1.0, 10);
+		
+		var besd2a = parseFloat(document.getElementById("besd2a").value.replace(",",".")*1.0, 10);
+		var besd2b = parseFloat(document.getElementById("besd2b").value.replace(",",".")*1.0, 10);
+
+		
+		if(document.getElementById("besd1a").value.length==0||document.getElementById("besd1b").value.length==0||document.getElementById("besd2a").value.length==0||document.getElementById("besd2b").value.length==0){
+			document.getElementById("besd1c").value = "";
+			document.getElementById("besd1c").style.backgroundColor = "#FFAAAA";
+
+			document.getElementById("besd2c").value = "";
+			document.getElementById("besd2c").style.backgroundColor = "#FFAAAA";			
+			
+			document.getElementById("besd3").value = "";
+			document.getElementById("besd3").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("besd4").value = "";
+			document.getElementById("besd4").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("besd5").value = "";
+			document.getElementById("besd5").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("nnt").value = "";
+			document.getElementById("nnt").style.backgroundColor = "#FFAAAA";
+			
+			document.getElementById("besd6").value = "";
+			
+			return;
+		}
+		
+		var p1 = besd1a / (besd1a + besd1b);
+		var p2 = besd2a / (besd2a + besd2b);
+		var nnt = 1 / (p1 - p2);
+		
+		document.getElementById("besd1c").value = Math.round(p1*1000.0)/10.0 + "%";
+		document.getElementById("besd1c").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("besd2c").value = Math.round(p2*1000.0)/10.0 + "%";
+		document.getElementById("besd2c").style.backgroundColor = "#AAAAFF";
+		
+		var besd = (p1-p2)*100;
+		document.getElementById("besd3").value = Math.round((p1-p2)*1000.0)/10.0 + "%";
+		document.getElementById("besd3").style.backgroundColor = "#AAAAFF";
+		
+		var phi = ((besd1a*besd2b) - (besd1b*besd2a))/Math.sqrt((besd1a + besd1b)*(besd1a + besd2a)*(besd1b + besd2b)*(besd1b + besd2a));
+		document.getElementById("besd4").value = Math.round(phi*1000.0)/1000.0;
+		document.getElementById("besd4").style.backgroundColor = "#AAAAFF";
+		
+		var d = (2*phi)/Math.sqrt(1-(phi*phi));
+		document.getElementById("besd5").value = Math.round(d*1000.0)/1000.0;
+		document.getElementById("besd5").style.backgroundColor = "#AAAAFF";
+		
+		document.getElementById("nnt").value = Math.round(nnt*1000.0)/1000.0;
+		document.getElementById("nnt").style.backgroundColor = "#AAAAFF";
+		
+		if(besd>=0){
+			document.getElementById("besd6").value = "In case of treatment, the probability of success increases by " + Math.round((p1-p2)*1000.0)/10.0 + "%. " + Math.round(nnt*1000.0)/1000.0 + " persons are needed to get at least one favourable outcome compared to the controll group.";
+		}else{
+			document.getElementById("besd6").value = "In case of treatment, the probability of success decreases by " + (-1.0)*Math.round((p1-p2)*1000.0)/10.0 + "%. " + (-1.0)*Math.round(nnt*1000.0)/1000.0 + " persons are needed to get at least one unfavourable outcome compared to the controll group (Number Needed to Harm).";
+		}	
+	}
+	
+		function nnt(){
+		if(document.getElementById("nntd1").value.length==0){
+			document.getElementById("klauer").value = "";
+			document.getElementById("klauer").style.backgroundColor = "#FFAAAA";
+			return;
+		}
+		
+		var nntd1 = parseFloat(document.getElementById("nntd1").value.replace(",",".")*1.0, 10)/1.414213562;
+		var nntd2 = 1.0/((2.0 * cumulativeNormal(nntd1))-1.0);
+		
+				
+		document.getElementById("nntd2").value = Math.round(nntd2*1000.0)/1000.0;
+		document.getElementById("nntd2").style.backgroundColor = "#AAAAFF";
+	}
+	
+	function cumulativeNormal(X) {
+		var T=1/(1+.2316419*Math.abs(X));
+		var D=.3989423*Math.exp(-X*X/2);
+		var Prob=D*T*(.3193815+T*(-.3565638+T*(1.781478+T*(-1.821256+T*1.330274))));
+		if (X>0) {
+			Prob=1-Prob;
+		}
+		return Prob;
+	}
+	
+	function relativerisk(){
+		var a = parseFloat(document.getElementById("rr_or_a").value.replace(",",".")*1.0, 10);
+		var b = parseFloat(document.getElementById("rr_or_b").value.replace(",",".")*1.0, 10);
+		
+		var c = parseFloat(document.getElementById("rr_or_c").value.replace(",",".")*1.0, 10);
+		var d = parseFloat(document.getElementById("rr_or_d").value.replace(",",".")*1.0, 10);
+		
+		
+		if(document.getElementById("rr_or_a").value.length==0||document.getElementById("rr_or_b").value.length==0||document.getElementById("rr_or_c").value.length==0||document.getElementById("rr_or_d").value.length==0){
+			document.getElementById("rr_or_a").style.backgroundColor = "#FFAAAA";
+			document.getElementById("rr_or_b").style.backgroundColor = "#FFAAAA";
+			document.getElementById("rr_or_c").style.backgroundColor = "#FFAAAA";
+			document.getElementById("rr_or_d").style.backgroundColor = "#FFAAAA";
+			document.getElementById("rr_or_n1").value = "";
+			document.getElementById("rr_or_n2").value = "";
+			document.getElementById("relativerisk").value = "";
+			document.getElementById("oddsratio").value = "";
+			document.getElementById("riskdifference").value = "";
+			document.getElementById("logrelativerisk").value = "";
+			document.getElementById("logoddsratio").value = "";
+			document.getElementById("vlogrelativerisk").value = "";
+			document.getElementById("vlogoddsratio").value = "";
+			document.getElementById("vriskdifference").value = "";
+			document.getElementById("selogrelativerisk").value = "";
+			document.getElementById("selogoddsratio").value = "";
+			document.getElementById("seriskdifference").value = "";
+			return;
+		}
+		
+			
+		document.getElementById("rr_or_a").style.backgroundColor = "#AAAAFF";
+		document.getElementById("rr_or_b").style.backgroundColor = "#AAAAFF";
+		document.getElementById("rr_or_c").style.backgroundColor = "#AAAAFF";
+		document.getElementById("rr_or_d").style.backgroundColor = "#AAAAFF";
+	
+		
+		var n1 = a + b;
+		var n2 = c + d
+		document.getElementById("rr_or_n1").value = n1;
+		document.getElementById("rr_or_n2").value = n2;
+		
+		var relativerisk = (a/n1)/(c/n2);
+		document.getElementById("relativerisk").value = Math.round((relativerisk)*10000.0)/10000.0;
+		
+		var oddsratio = (a*d)/(b*c);
+		document.getElementById("oddsratio").value = Math.round((oddsratio)*10000.0)/10000.0;
+		
+		var yule = (oddsratio-1)/(oddsratio+1);
+		document.getElementById("yule").value = Math.round((yule)*10000.0)/10000.0;
+		
+		var riskdifference = (a/n1)-(c/n2);
+		document.getElementById("riskdifference").value = Math.round((riskdifference)*10000.0)/10000.0;
+		
+		var logrelativerisk = Math.log((a/n1)/(c/n2));
+		document.getElementById("logrelativerisk").value = Math.round((logrelativerisk)*10000.0)/10000.0;
+		
+		var logoddsratio = Math.log((a*d)/(b*c));
+		document.getElementById("logoddsratio").value = Math.round((logoddsratio)*10000.0)/10000.0;
+		
+		var vlogrelativerisk = (1/a)-(1/n1)+(1/c)-(1/n2);
+		document.getElementById("vlogrelativerisk").value = Math.round((vlogrelativerisk)*10000.0)/10000.0;
+		
+		var vlogoddsratio = (1/a) + (1/b) + (1/c) + (1/d);
+		document.getElementById("vlogoddsratio").value = Math.round((vlogoddsratio)*10000.0)/10000.0;
+		
+		var vriskdifference = ((a*b)/(n1*n1*n1)) + ((c*d)/(n2*n2*n2));
+		document.getElementById("vriskdifference").value = Math.round((vriskdifference)*10000.0)/10000.0;
+
+		var selogrelativerisk = Math.sqrt(vlogrelativerisk);
+		document.getElementById("selogrelativerisk").value = Math.round((selogrelativerisk)*10000.0)/10000.0;
+		
+		var selogoddsratio = Math.sqrt(vlogoddsratio);
+		document.getElementById("selogoddsratio").value = Math.round((selogoddsratio)*10000.0)/10000.0;
+		
+		var seriskdifference = Math.sqrt(vriskdifference);
+		document.getElementById("seriskdifference").value = Math.round((seriskdifference)*10000.0)/10000.0;
+	}
+	
+	function getZforU(U, n1, n2){
+		var result = (U - (n1*n2/2))/Math.sqrt(n1*n2*(n1+n2+1)/12);
+		if(result<0)
+			result = (-1) * result;
+		return result;
+	}
+	
+	
+	function getZforW(W, n){
+		var result = (W - (n*(n+1)))/Math.sqrt(n*(n+1)*(2*n+1)/24);
+		
+		if(result<0)
+			result = (-1) * result;
+		return result;
+	}
+	
+	function getEtaForZ(z, n){
+		var result = z*z/n;
+		if(result<0)
+			result = (-1) * result;
+		return result;
+	}
+	
+	function nonparametric(){
+		var index = document.getElementById("nonpar").value;
+		var test = parseFloat(document.getElementById("nonparamTest").value.replace(",",".")*1.0, 10);
+		var n1 = parseFloat(document.getElementById("nonparamN1").value.replace(",",".")*1.0, 10);
+		var n2 = parseFloat(document.getElementById("nonparamN2").value.replace(",",".")*1.0, 10);
+		
+		if(index=="---"){
+			document.getElementById("nonparamTest").value = "";
+			document.getElementById("nonparamTest").style.backgroundColor = "";
+			document.getElementById("nonparamN1").value = "";
+			document.getElementById("nonparamN1").style.backgroundColor = "";
+			document.getElementById("nonparamN2").value = "";
+			document.getElementById("nonparamN2").style.backgroundColor = "";
+			document.getElementById("nonparamEta").value = "";
+			document.getElementById("nonparamEta").style.backgroundColor = "";
+			document.getElementById("nonparamCohen").value = "";
+			document.getElementById("nonparamCohen").style.backgroundColor = "";
+			document.getElementById('nonparamTest').disabled = true;
+			document.getElementById('nonparamN1').disabled = true;
+			document.getElementById('nonparamN2').disabled = true;
+			document.getElementById('nonpar_statistic').innerHTML = "<b>Teststatistic <small><sup>*</sup></small></b>";
+			document.getElementById('nonpar_n1_text').innerHTML = "<b>n<small><sub>1</sub></small></b>";
+			document.getElementById('nonpar_n2_text').innerHTML = "<b>n<small><sub>2</sub></small></b>";
+			return;
+		}else if(index=="Mann-Whitney-U"){
+			document.getElementById('nonparamTest').disabled = false;
+			document.getElementById('nonparamN1').disabled = false;
+			document.getElementById('nonparamN2').disabled = false;
+			document.getElementById('nonpar_statistic').innerHTML = "<b>Mann-Whitney-U</b>";
+			document.getElementById('nonpar_n2_text').innerHTML = "<b>n<small><sub>2</sub></small></b>";
+			document.getElementById('nonpar_n1_text').innerHTML = "<b>n<small><sub>1</sub></small></b>";
+		}else if(index=="kruskal"){
+			document.getElementById('nonparamTest').disabled = false;
+			document.getElementById('nonparamN1').disabled = false;
+			document.getElementById('nonparamN2').disabled = false;
+			document.getElementById('nonpar_statistic').innerHTML = "<b>Kruskal-Wallis-H</b>";
+			document.getElementById('nonpar_n1_text').innerHTML = "<b>N</b>";
+			document.getElementById('nonpar_n2_text').innerHTML = "<b>Anzahl an Gruppen (<i>k</i>)</b>";
+		}else if(index=="Wilcoxon-W"){
+			document.getElementById('nonparamTest').disabled = false;
+			document.getElementById('nonparamN1').disabled = false;
+			document.getElementById('nonparamN2').disabled = true;
+			document.getElementById('nonpar_statistic').innerHTML = "<b>Wilcoxon-W</b>";
+			document.getElementById('nonpar_n1_text').innerHTML = "<b>N</b>";
+			document.getElementById('nonpar_n2_text').innerHTML = "<b>n<small><sub>2</sub></small></b>";
+		}else if(index=="z"){
+			document.getElementById('nonparamTest').disabled = false;
+			document.getElementById('nonparamN1').disabled = false;
+			document.getElementById('nonparamN2').disabled = true;
+			document.getElementById('nonpar_statistic').innerHTML = "<b>z</b>";
+			document.getElementById('nonpar_n1_text').innerHTML = "<b>N</b>";
+			document.getElementById('nonpar_n2_text').innerHTML = "<b>n<small><sub>2</sub></small></b>";
+		}
+		
+		
+		
+		if((index=="---")||
+			((index=="Mann-Whitney-U"||index=="kruskal")&&(document.getElementById("nonparamTest").value.length==0||document.getElementById("nonparamN1").value.length==0||document.getElementById("nonparamN2").value.length==0))||
+			(document.getElementById("nonparamTest").value.length==0&&document.getElementById("nonparamN1").value.length==0)){
+				document.getElementById("nonparamEta").value = "";
+				document.getElementById("nonparamEta").style.backgroundColor = "#FFAAAA";
+				document.getElementById("nonparamCohen").value = "";
+				document.getElementById("nonparamCohen").style.backgroundColor = "#FFAAAA";
+				return;
+		}
+		
+		if(index=="Mann-Whitney-U"){
+			var z = getZforU(test, n1, n2);
+			var eta = getEtaForZ(z, (n1+n2));
+			var d = Math.sqrt(eta/(1-eta))*2;
+			document.getElementById("nonparamEta").value = Math.round(eta*1000.0)/1000.0;
+			document.getElementById("nonparamEta").style.backgroundColor = "#AAAAFF";
+			document.getElementById("nonparamCohen").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("nonparamCohen").style.backgroundColor = "#AAAAFF";
+			
+		} else if(index=="Wilcoxon-W"){
+			var z = getZforW(test, n1);
+			var eta = getEtaForZ(z, n1);
+			var d = Math.sqrt(eta/(1-eta))*2;
+			document.getElementById("nonparamEta").value = Math.round(eta*1000.0)/1000.0;
+			document.getElementById("nonparamEta").style.backgroundColor = "#AAAAFF";
+			document.getElementById("nonparamCohen").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("nonparamCohen").style.backgroundColor = "#AAAAFF";
+			
+		} else if(index=="kruskal"){
+			var z = getZforW(test, n1);
+			var eta = Math.abs((test - n2 + 1) / (n1 - n2));
+			var d = Math.sqrt(eta/(1-eta))*2;
+			document.getElementById("nonparamEta").value = Math.round(eta*1000.0)/1000.0;
+			document.getElementById("nonparamEta").style.backgroundColor = "#AAAAFF";
+			document.getElementById("nonparamCohen").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("nonparamCohen").style.backgroundColor = "#AAAAFF";
+			
+		} else if(index=="z"){
+			var eta = getEtaForZ(test, n1);
+			var d = Math.sqrt(eta/(1-eta))*2;
+			document.getElementById("nonparamEta").value = Math.round(eta*1000.0)/1000.0;
+			document.getElementById("nonparamEta").style.backgroundColor = "#AAAAFF";
+			document.getElementById("nonparamCohen").value = Math.round(d*1000.0)/1000.0;
+			document.getElementById("nonparamCohen").style.backgroundColor = "#AAAAFF";
+			
+		}
+		
+		
+	}
+	
+</script>
+
+
+
+</head>
+
+
+<body>
+
+
+<div id="wrap">
+<div id="header"><br />
+
+
+</div>
+
+
+<script type="text/javascript">menuBar("FREEWARE");</script>
+ 
+
+<div id="leftside">
+<h2 class="hide">Site menu:</h2>
+
+<ul class="avmenu">
+
+ 
+  <script type="text/javascript">menuFreewareEnglisch("Effect Size");</script>
+
+  
+  <script src="js/search.js" type="text/javascript"></script>
+  <script type="text/javascript">search();</script>
+  
+
+</ul>
+
+</div>
+
+<div id="contentwide">
+
+
+<blockquote><img src="img/cNorm_80.png" style="margin: 0px 0px 0px 0px" alt="Continuous Norming with R" align="right"><b>New: <a href="cNorm_en.html">Continuous Norming with R (cNORM)</a></b><br>R package for generating continuous test norms in psychometrics and biometrics and for analyzing the model fit</blockquote><br><br>
+
+<div id="contenttable">
+
+<a href="effektstaerke.html"><img src="img/de.png" alt="Switch to German language" align=right></a><h2>Computation of Effect Sizes</h2>
+<img src="img/effektstaerke.png" align=right style="padding: 40px 0px 40px 20px"><p>Statistical significance specifies, if a result may not be the cause of random variations within the data. But not every significant result refers to an effect with a high impact, resp. it may even describe a phenomenon that is not really perceivable in everyday life. Statistical significance mainly depends on the sample size, the quality of the data and the power of the statistical procedures. If large data sets are at hand, as it is often the case f. e. in epidemiological studies or in large scale assessments, very small effects may reach statistical significance. In order to describe, if effects have a relevant magnitude, effect sizes are used to describe the strength of a phenomenon. The most popular effect size measure surely is Cohen's d (Cohen, 1988), but there are many more.</p>
+<p>Here you will find a number of online calculators for the computation of different effect sizes and an interpretation table at the bottom of this page. Please click on the grey bars to show the calculators:</p>
+
+
+
+
+
+
+
+
+<a name="cohen"></a>
+
+<button class="accordion">1. Comparison of groups with equal size (Cohen's d and Glass &Delta;)</button>
+<div class="panel">	<br><br>
+<p>If the two groups have the same <i>n</i>, then the effect size is simply calculated by subtracting the means and dividing the result by the pooled standard deviation. The resulting effect size is called d<sub>Cohen</sub> and it represents the difference between the groups in terms of their common standard deviation. It is used f. e. for calculating the effect for pre-post comparisons in single groups.</p>
+<p>In case of relevant differences in the standard deviations, Glass suggests not to use the pooled standard deviation but the standard deviation of the control group. He argues that the standard deviation of the control group should not be influenced, at least in case of non-treatment control groups. This effect size measure is called <i>Glass' &Delta;</i> ("Glass' Delta"). Please type the data of the control group in column 2 for the correct calculation of Glass' &Delta;.</p>
+<p>Finally, the Common Language Effect Size (CLES; McGraw & Wong, 1992) is a non-parametric effect size, specifying the probability that one case randomly drawn from the one sample has a higher value than a randomly drawn case from the other sample. In the calculator, we take the higher group mean as the point of reference, but you can use (1 - CLES) to reverse the view.</p>
+	<table align="center" width=70%>
+		<tr>
+			<td></td>
+			<td style="text-align:center;"><b>Group 1</b></td>
+			<td style="text-align:center;"><b>Group 2</b></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Mean</b></td>
+			<td><input id="m1_cohen" style="text-align:center; width:100px;" onkeyup="cohen1()" value=""></td>
+			<td><input id="m2_cohen" style="text-align:center; width:100px;" onkeyup="cohen1()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Standard Deviation</b></td>
+			<td><input id="s1_cohen" style="text-align:center; width:100px;" onkeyup="cohen1()" value=""></td>
+			<td><input id="s2_cohen" style="text-align:center; width:100px;" onkeyup="cohen1()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub>Cohen</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="cohen1" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>Glass' &Delta;</i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="glass" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Common Language Effect Size <i>CLES</i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="cles1" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+	</table>
+	
+	<br>
+	<table align="center" width=70%>		
+		<tr>
+			<td style="text-align:center";><b>N</b><br><small>(Total number of observations in both groups)</small></td>
+			<td  style="text-align:center;"><input id="cohen1_N" style="text-align:center; width:150px;" value="" onkeyup="cohen1()"></td>
+		</tr>
+		<tr>
+			<td style="text-align:center;"><b>Confidence Coefficient</b></td>
+			<td style="text-align:center;"><select width="100px" id="cohen1_coefficient" name="type" onChange="cohen1()"><option value="---">---</option><option value="95">95%</option><option value="90">90%</option><option value="80">80%</option><option value="68">68%</option></select></td>			
+		</tr>
+		<tr>
+		<td style="text-align:center";><b>Confidence Interval for <i>d<sub><small>Cohen<small></sub></i></b></td>
+			<td  style="text-align:center;"><input id="cohen1_ci" style="text-align:center; width:150px;" value="" readonly disabled  onkeyup="cohen1()"></td>
+		</tr>	
+		
+	</table>
+	<br><br>
+	</div>
+	<br>	
+
+	
+	
+	
+	
+	
+	
+<a name="cohenb"></a>
+
+<button class="accordion">2. Comparison of groups with different sample size (<i>Cohen's d, Hedges' g</i>)</button>
+<div class="panel">	<br><br>
+<p>Analogously, the effect size can be computed for groups with different sample size, by adjusting the calculation of the pooled standard deviation with weights for the sample sizes. This approach is overall identical with <i>d<sub>Cohen</sub></i> with a correction of a positive bias in the pooled standard deviation. In the literature, usually this computation is called <i>Cohen's d</i> as well. Please have a look at the remarks bellow the table.</p>
+<p>The Common Language Effect Size (CLES; McGraw & Wong, 1992) is a non-parametric effect size, specifying the probability that one case randomly drawn from the one sample has a higher value than a randomly drawn case from the other sample. In the calculator, we take the higher group mean as the point of reference, but you can use (1 - CLES) to reverse the view.</p>
+<p>Additionally, you can compute the confidence interval for the effect size and chose a desired confidence coefficient (calculation according to Hedges & Olkin, 1985, p. 86).</p>
+<table align="center" width=75%>
+		<tr>
+			<td></td>
+			<td style="text-align:center;"><b>Group 1</b></td>
+			<td style="text-align:center;"><b>Group 2</b></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Mean</b></td>
+			<td><input id="m1_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+			<td><input id="m2_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Standard Deviation</b></td>
+			<td><input id="s1_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+			<td><input id="s2_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Sample Size (N)</b></td>
+			<td><input id="n1_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+			<td><input id="n2_cohen2" style="text-align:center; width:100px;" onkeyup="cohen2()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub>Cohen</sub> resp. g<sub>Hedges</sub></i> <sup>*</sup></b></td>
+			<td colspan=2  style="text-align:center;"><input id="cohen2" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Common Language Effect Size <i>CLES</i><sup>**</sup></b></td>
+			<td colspan=2  style="text-align:center;"><input id="cles2" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+
+	</table>
+		<br>
+	<table align="center" width=75%>		
+		<tr>
+			<td style="text-align:center;"><b>Confidence Coefficient</b></td>
+			<td style="text-align:center;"><select width="100px" id="cohen2_coefficient" name="type" onChange="cohen2()"><option value="---">---</option><option value="95">95%</option><option value="90">90%</option><option value="80">80%</option><option value="68">68%</option></select></td>			
+			
+			
+		</tr>
+		<tr>
+		<td style="text-align:center";><b>Confidence Interval</b></td>
+			<td  style="text-align:center;"><input id="cohen2_ci" style="text-align:center; width:150px;" value="" readonly disabled onkeyup="cohen2()"></td>
+		</tr>	
+		
+	</table>
+	<br>
+	<small>
+	<sup>*</sup>Unfortunately, the terminology is imprecise on this effect size measure: Originally, Hedges and Olkin referred to Cohen and called their corrected effect size <i>d</i> as well. On the other hand, corrected effect sizes were called <i>g</i> since the beginning of the 80s. The letter is stemming from the author Glass (see Ellis, 2010, S. 27), who first suggested corrected measures. Following this logic, <i>g<sub>Hedges</sub></i> should be called <i>h</i> and not <i>g</i>. Usually it is simply called <i>d<sub>Cohen</sub></i> or <i>g<sub>Hedges</sub></i> to indicate, it is a corrected measure.<br>
+	<sup>**</sup>The Common Language Effect Size (CLES) is calculated by using the cumulative probability of divided by 1.41 via <math xmlns="http://www.w3.org/1998/Math/MathML">
+
+		<mi>CLES</mi><mo>=</mo><mi>&Phi;</mi><mfenced><mfrac><mi>d</mi><mrow><msqrt><mi><mn>2</mn></msqrt></mrow></mfrac></mfenced>
+	
+	</math>
+	</small>
+	<br><br>
+	</div>
+	<br>	
+	
+
+	
+	
+	
+<a name="cohc"></a>
+
+<button class="accordion">3. Effect size for mean differences of groups with unequal sample size within a pre-post-control design</button>
+<div class="panel">	
+	<br><br>
+<p>Intervention studies usually compare the development of at least two groups (in general an experimental group and a control group). In many cases, the pretest means and standard deviations of both groups do not match and there are a number of possibilities to deal with that problem. Klauer (2001) proposes to compute g<sub><small></sub></small> for both groups and to subtract them afterwards. This way, different sample sizes and pre-test values are automatically corrected. The calculation is therefore equal to computing the effect sizes of both groups via <a href="#cohenb">form 2</a> and afterwards to subtract both. Morris (2008) presents different effect sizes for repeated measures designs and does a simulation study. He argues to use the pooled pretest standard deviation for weighting the differences of the pre-post-means (so called d<sub><small>ppc2</small></sub> according to Carlson & Smith, 1999). That way, the intervention does not influence the standard deviation. Additionally, there are weighting to correct for the estimation of the population effect size. Usually, Klauer (2001) and Morris (2002) yield similar results.</p>
+<p>The downside to this approach: The pre-post-tests are not treated as repeated measures but as independent data. For dependent tests, you can use calculator <a href="#repeated">4</a> or <a href="#dep">5</a> or <a href="#tranfsorm">13. transform eta square from repeated measures</a> in order to account for dependences between measurement points.</p>
+	<table align="center" width=90%>
+		<tr>
+			<td></td>
+			<td colspan=2 style="text-align:center;"><b>Intervention Group</b></td>
+			<td colspan=2 style="text-align:center;"><b>Control Group</b></td>
+		</tr>
+		
+		<tr>
+			<td></td>
+		
+			<td style="text-align:center;"><b>Pre</b></td>
+			<td style="text-align:center;"><b>Post</b></td>
+			
+			<td style="text-align:center;"><b>Pre</b></td>
+			<td style="text-align:center;"><b>Post</b></td>
+			
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Mean</b></td>
+			<td><input id="m1pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="m1post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="m2pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="m2post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Standard Deviation</b></td>
+			<td><input id="s1pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="s1post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="s2pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="s2post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Sample Size (N)</b></td>
+			<td><input id="n1pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="n1post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="n2pre_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+			<td><input id="n2post_klauer" style="text-align:center; width:80px;" onkeyup="klauer()" value=""></td>
+		</tr>
+		
+
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub><small>ppc2</small></sub></i> sensu Morris (2008)</b></td>
+			<td colspan=4  style="text-align:center;"><input id="dppc2" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub><small>Korr</small></sub></i> sensu Klauer (2001)</b></td>
+			<td colspan=4  style="text-align:center;"><input id="klauer" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+	</table><br>
+<small><sup>*</sup>Remarks: Klauer (2001) published his suggested effect size in German language and the reference should therefore be hard to retrieve for international readers. Klauer worked in the field of cognitive trainings and was interested in the comparison of the effectivity of different training approaches. His measure is simple and straightforward: <i>d<sub>corr</sub></i> is simply the difference between <i>Hedge's g</i> of two different treatment groups in pre-post research designs. When reporting meta analytic results in international journals, it might be easier to cite Morris (2008).</small>
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+<a name="repeated"></a>
+
+<button class="accordion">4. Effect size estimates in repeated measures designs</button>
+<div class="panel">	<br><br>
+<p>While steps 1 to 3 target at comparing independent groups, especially in intervention research, the results are usually based on intra-individual changes in test scores. Morris & DeShon (2008, p.109) suggest a procedure to estimate the effect size for single-group pretest-posttest designs by taking the correlation between the pre- and post-test into account:</p>
+<div align="center"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x3C3;</mi><mi>D</mi></msub><mo>=</mo><mi>&#x3C3;</mi><mo>&#xB7;</mo><msqrt><mn>2</mn><mo>&#xB7;</mo><mo>(</mo><mrow><mn>1</mn><mo>-</mo><mi>&#x3C1;</mi></mrow><mo>)</mo></msqrt></math></div>
+<p>In case, the correlation is .5, the resulting effect size equals <a href="#cohen">1. Comparison of groups with equal size (Cohen's d and Glass &Delta;)</a>. Higher values lead to an increase in the effect size. Morris & DeShon (2008) suggest to use the standard deviation of the pre-test, as this value is not influenced by the intervention. The following calculator both reports the according effect size and as well reports the effect size based on the pooled standard deviation and the effect size without correcting for the correlation <i>d<sub>Individual Groups</sub></i> (equaling <i>d<sub><small>Cohen</small></sub></i>):</p>
+
+	<table align="center" width=80%>
+		<tr>
+			<td></td>
+			<td style="text-align:center;"><b>Group 1</b></td>
+			<td style="text-align:center;"><b>Group 2</b></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Mean</b></td>
+			<td><input id="m1_repeated" style="text-align:center; width:100px;" onkeyup="repeated()" value=""></td>
+			<td><input id="m2_repeated" style="text-align:center; width:100px;" onkeyup="repeated()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Standard Deviation</b></td>
+			<td><input id="s1_repeated" style="text-align:center; width:100px;" onkeyup="repeated()" value=""></td>
+			<td><input id="s2_repeated" style="text-align:center; width:100px;" onkeyup="repeated()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Correlation</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="r_repeated" style="text-align:center; width:100px;" onkeyup="repeated()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub>Repeated Measures</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="d_repeated" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub>Repeated Measures, pooled</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="dpool_repeated" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+
+		<tr>
+			<td style="text-align:right;"><b>Effect Size <i>d<sub>Individual Groups</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="dpool_repeated_ig" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+	</table>
+	
+		<br>
+	<table align="center" width=80%>		
+		<tr>
+			<td style="text-align:center";><b>N</b><br><small></small</td>
+			<td  style="text-align:center;"><input id="repeated_n" style="text-align:center; width:150px;" value="" onkeyup="repeated()"></td>
+		</tr>
+		<tr>
+			<td style="text-align:center;"><b>Confidence Coefficient</b></td>
+			<td style="text-align:center;"><select width="100px" id="repeated_coefficient" name="type" onChange="repeated()"><option value="---">---</option><option value="95">95%</option><option value="90">90%</option><option value="80">80%</option><option value="68">68%</option></select></td>			
+		</tr>
+		<tr>
+		<td style="text-align:center";><b>Confidence Interval for <i>d<sub><small>RM<small></sub></i></b></td>
+			<td  style="text-align:center;"><input id="repeated_ci" style="text-align:center; width:150px;" value="" readonly disabled  onkeyup="repeated()"></td>
+		</tr>	
+		
+	</table>
+	
+<p align=right><small>Thanks to Sven van As for pointing us to this effect size.</small></p>
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+<a name="dep"></a>
+
+<button class="accordion">5. Calculation of d and r from the test statistics of dependent and independent t-tests</button>
+<div class="panel">	<br><br>
+<p>Effect sizes can be obtained by using the tests statistics from hypothesis tests, like Student <i>t</i> tests, as well. In case of independent samples, the result is essentially the same as in <a href="#cohenb">effect size calculation #2</a>.</p>
+<p>Dependent testing usually yields a higher power, because the interconnection between data points of different measurements are kept. This may be relevant f. e. when testing the same persons repeatedly, or when analyzing test results from matched persons or twins. Accordingly, more information may be used when computing effect sizes. Please note, that this approach largely has the same results compared to using a <i>t</i>-test statistic on gain scores and using the independent sample approach (Morris & DeShon, 2002, p. 119). Additionally, there is not THE one <i>d</i>, but that there are different d-like measures with different meanings. Consequently a <i>d</i> from an dependent sample is not directly comparable to a <i>d</i> from an independent sample, but yields different meanings (see notes below table).</p>
+<p>Please choose the mode of testing (dependent vs. independent) and specify the <i>t</i> statistic. In case of a dependent <i>t</i> test, please type in the number of cases and the correlation between the two variables. In case of independent samples, please specify the number of cases in each group. The calculation is based on the formulas reported by Borenstein (2009, pp. 228).</p>
+
+<table align="center" width=50%>
+
+	<tr>
+		<td style="text-align:right;"><b>Mode of testing</b></td>
+		<td><select id="dependend_drop" name="type" onChange="dependendt()"><option value="---">---</option><option value="dependent">dependent <sup>*</sup></option><option value="independent">independent</option></select></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Student t Value</b></td>
+		<td><input id="t_value" style="text-align:center; width:80px;" onkeyup="dependendt()" value="" disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>n<sub>1</sub></b></td>
+		<td><input id="t_n1" style="text-align:center; width:80px;" onkeyup="dependendt()" value="" disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>n<sub>2</sub></b></td>
+		<td><input id="t_n2" style="text-align:center; width:80px;" onkeyup="dependendt()" value="" disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>r</b></td>
+		<td><input id="t_r" style="text-align:center; width:80px;" onkeyup="dependendt()" value="" disabled></td>
+	</tr>
+	
+	<tr>
+		<td colspan=2><hr></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Effect Size <i>d</i></b></td>
+		<td><input id="d_dependend" style="text-align:center; width:80px;" readonly disabled></td>
+	</tr>
+</table>
+<p><small><sup>*</sup> We used the formula t<sub><small>c</small></sub> described in Dunlop, Cortina, Vaslow & Burke (1996, S. 171) in order to calculate d from dependent t-tests. Simulations proved it to have the least distortion in estimating d: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>d</mi><mo>&#xA0;</mo><mo>=</mo><mo>&#xA0;</mo><msub><mi>t</mi><mi>c</mi></msub><msqrt><mfrac><mrow><mn>2</mn><mo>(</mo><mn>1</mn><mo>-</mo><mi>r</mi><mo>)</mo></mrow><mi>n</mi></mfrac></msqrt></math>
+
+<br>We would like to thank Frank Aufhammer for pointing us to this publication.
+<br><br><sup>**</sup> We would like to thank Scott Stanley for pointing out the following aspect: "When selecting 'dependent' in the drop down, this calculator does not actually calculate an effect size based on accounting for the dependency between the two variables being compared. It removes that dependency already calculated into a t-statistic so formed. That is, what this calculator does is take a t value you already have, along with the correlation, from a dependent t-test and removes the effect of the dependency. That is why it returns a value more like calculator 2. This calculator will produce an effect size when dependent is selected as if you treated the data as independent even though you have a t-statistic for modeling the dependency. Some experts in meta-analysis explicitly recommend using effect sizes that are not based on taking into account the correlation. This is useful for getting to that value when that is your intention but what you are starting with is a t-test and correlation based on a dependent analysis. If you would rather have the effect size taking into account the dependency (the correlation between measures), and you have the data, you should use calculator 4." (direct correspondence on 18<sup>th</sup> of August, 2019). Further discussions on this aspect is given in <a href="http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/" target="_blank">Jake Westfall's blog</a>. To sum up: The decision on which effect size to use depends on your research question and this decision cannot be resolved definitively by the data themselves.
+
+</small></p>
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+<a name="fvalue"></a>
+
+<button class="accordion">6. Computation of d from the F-value of Analyses of Variance (ANOVA)</button>
+<div class="panel">	<br><br>
+<p>A very easy to interpret effect size from analyses of variance (ANOVAs) is &eta;<sup>2</sup> that reflects the explained proportion variance of the total variance. This proportion may be <a href="#transform">13. transformed directly into d</a>. If &eta;<sup>2</sup> is not available, the F value of the ANOVA can be used as well, as long as the sample size is known. The following computation only works for ANOVAs with two distinct groups (df1 = 1; Thalheimer & Cook, 2002):</p>
+
+
+<table align="center" width=50%>
+	<tr>
+		<td style="text-align:right;"><b>F-Value</b></td>
+		<td><input id="f" style="text-align:center; width:80px;" onkeyup="cohen3()" value=""></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Sample Size of the Treatment Group</b></td>
+		<td><input id="n1_f" style="text-align:center; width:80px;" onkeyup="cohen3()" value=""></td>
+	</tr>
+	
+		<tr>
+		<td style="text-align:right;"><b>Sample Size of the Controll Group</b></td>
+		<td><input id="n2_f" style="text-align:center; width:80px;" onkeyup="cohen3()" value=""></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Effect Size <i>d</i></b></td>
+		<td><input id="cohenf" style="text-align:center; width:80px;" readonly disabled></td>
+	</tr>
+</table>	
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+<a name="anova"></a>
+
+<button class="accordion">7. Calculation of effect sizes from ANOVAs with multiple groups, based on group means</button>
+<div class="panel">	<br><br>
+<p>In case, the groups means are known from ANOVAs with multiple groups, it is possible to compute the effect sizes <i>f</i> and <i>d</i> (Cohen, 1988, S. 273 ff.). 
+Prior to computing the effect size, you have to determine the minimum and maximum mean and to calculate the between groups standard deviation &sigma;<sub><small>m</small></sub> manually: 
+<ol><li>compute the differences between the means of each single group and the mean of the whole sample</li><li>square the differences and sum them up</li><li>divide the sum by the 
+number of means</li><li>draw the square root</li></ol><br>
+<div align="center"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x3C3;</mi><mi>m</mi></msub><mo>=</mo><msqrt><mfrac><mrow><mstyle displaystyle="true"><munderover><mo>&#x2211;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover></mstyle><mo>(</mo><msub><mi>m</mi><mi>i</mi></msub><mo>-</mo><mi>m</mi><msup><mo>)</mo><mn>2</mn></msup></mrow><mi>k</mi></mfrac></msqrt></math></div>
+</p>
+<p>Additionally, you have to decide, which scenario fits the data best:
+<ol>
+	<li>Please choose 'minimum deviation', if the group means are distributed close to the total mean.</li>
+	<li>Please choose 'intermediate deviation', if the means are evenly distributed.</li>
+	<li>Please choose 'maximum deviation', if the means are distributed mainly towards the extremes and not in the center of the range of means.</li>
+</ol>
+</p>
+
+<table align="center" width=80%>
+	<tr>
+		<td style="text-align:right;"><b>Highest Mean (<i>m<sub>max</sub></i>)</b></td>
+		<td><input id="anovamax" style="text-align:center; width:80px;" onkeyup="anova()" value=""></td>
+	</tr>
+	<tr>
+		<td style="text-align:right;"><b>Lowest Mean (<i>m<sub>min</sub></i>)</b></td>
+		<td><input id="anovamin" style="text-align:center; width:80px;" onkeyup="anova()" value=""></td>
+	</tr>
+	<tr>
+		<td style="text-align:right;"><b>Between Group Std (&sigma;<sub><small>m</small></sub>)</b></td>
+		<td><input id="anovastd" style="text-align:center; width:80px;" onkeyup="anova()" value=""></td>
+	</tr>
+	<tr>
+		<td style="text-align:right;"><b>Std (&sigma; for the complete sample)</b></td>
+		<td><input id="anovastdall" style="text-align:center; width:80px;" onkeyup="anova()" value=""></td>
+	</tr>	
+	<tr>
+		<td style="text-align:right;"><b>Number of Groups</b></td>
+		<td><input id="anovak" style="text-align:center; width:80px;" onkeyup="anova()" value=""></td>
+	</tr>
+	<tr>
+		<td style="text-align:right;"><b>Distribution of Means</b></td>
+		<td><select id="anova_drop" name="type" onChange="anova()"><option value="---">---</option><option value="minimum">minimum deviation</option><option value="intermediate">intermediate deviation</option><option value="maximum">maximum deviation</option></select></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Effect Size <i>f</i></b></td>
+		<td><input id="anovaf" style="text-align:center; width:80px;" readonly disabled></td>
+	</tr>
+	<tr>
+		<td style="text-align:right;"><b>Effect Size <i>d</i></b></td>
+		<td><input id="anovad" style="text-align:center; width:80px;" readonly disabled></td>
+	</tr>
+</table>	
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+<a name="besd"></a>
+
+<button class="accordion">8. Increase of intervention success: <i>The Binomial Effect Size Display (BESD)</i> and <i>Number Needed to Treat (NNT)</i></button>
+<div class="panel">	<br><br>
+<p>Measures of effect size like <i>d</i> or correlations can be hard to communicate, e. g. to patients. If you use <i>r<sup>2</sup></i> f. e., effects seem to be really small and when a person does not know or understand the interpretation guidelines, even effective interventions could be seen as futile. And even small effects can be very important, as Hattie (2009) underlines:
+<ul>
+	<li>The effect of a daily dose of aspirin on cardio-vascular conditions only amounts to <i>d</i> = 0.07. However, if you look at the consequences, 34 of 1000 die less because of cardiac infarction.</li>
+	<li>Chemotherapy only has an effect of <i>d</i> = 0.12 on breast cancer. According to the interpretation guideline of Cohen, the therapy is completely ineffective, but it safes the life of many women.</li>
+</ul>
+
+</p>
+<p>Rosenthal and Rubin (1982) suggest another way of looking on the effects of treatments by considering the increase of success through interventions. The approach is suitable for 2x2 contingency tables with the different treatment groups in the rows and the number of cases in the columns. The BESD is computed by subtracting the probability of success from the intervention an the control group. The resulting percentage can be transformed into d<sub>Cohen</sub>.</p>
+<p>Another measure, that is widely used in evidence based medicine, is the so called <i>Number Needed to Treat</i>. It shows, how many people are needed in the treatment group in order to obtain at least one additional favorable outcome. In case of a negative value, it is called <i>Number Needed to Harm</i>.</p>
+<p>Please fill in the number of cases with a fortunate and unfortunate outcome in the different cells:</p>
+	<table align="center" width=70%>
+		<tr>
+			<td></td>
+			<td style="text-align:center;"><b>Success</b></td>
+			<td style="text-align:center;"><b>Failure</b></td>
+			<td style="text-align:center;"><b>Probability of Success</b></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Intervention group</b></td>
+			<td style="text-align:center" ><input id="besd1a" style="text-align:center; width:100px;" onkeyup="besd()" value=""></td>
+			<td style="text-align:center" ><input id="besd1b" style="text-align:center; width:100px;" onkeyup="besd()" value=""></td>
+			<td style="text-align:center" ><input id="besd1c" style="text-align:center; width:100px;" onkeyup="besd()" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Control Group</b></td>
+			<td style="text-align:center" ><input id="besd2a" style="text-align:center; width:100px;" onkeyup="besd()" value=""></td>
+			<td style="text-align:center" ><input id="besd2b" style="text-align:center; width:100px;" onkeyup="besd()" value=""></td>
+			<td style="text-align:center" ><input id="besd2c" style="text-align:center; width:100px;" onkeyup="besd()" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td colspan=3  style="text-align:right;"><b>Binomial Effect Size Display (BESD)<br>(Increase of Intervention Success)</b></td>
+			<td style="text-align:center" ><input id="besd3" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td colspan=3  style="text-align:right;"><b>Number Needed to Treat</b></td>
+			<td style="text-align:center" ><input id="nnt" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		
+		<tr>
+			<td colspan=3  style="text-align:right;"><b><i>r<sub>Phi</sub></i></b></td>
+			<td style="text-align:center" ><input id="besd4" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		<tr>
+			<td colspan=3  style="text-align:right;"><b>Effect Size <i>d<sub>cohen</sub></i></b></td>
+			<td style="text-align:center" ><input id="besd5" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+		<tr>
+		<td style="text-align:center" colspan=4><textarea  id="besd6" style="text-align:center; width:90%;" value="" readonly disabled></textarea></td>
+		</tr>
+	</table>
+	
+	<a name="nntconv"></a>
+	
+	<br><br>
+	<p>A conversion between NNT and other effect size measures liken Cohen's d is not easily possible. Concerning the example above, the transformation is done via the point-biserial correlation r<sub><small>phi</small></sub> which is nothing but an estimation. It leads to a constant NNT independent from the sample size and this is in line with publications like <a href="http://www.sciencedirect.com/science/article/pii/S0006322305012102" target=_blank">Kraemer and Kupfer (2006)</a>. Alternative approaches (comp. Furukawa & Leucht, 2011) allow to convert between d and NNT with a higher precision and usually they lead to higher numbers. The Kraemer et al. (2006) approach therefore seems to probably overestimate the effect and it seems to yield accurate results essentially, when normal distribution of the raw values is given. Please have a look at the <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0019070" target="_blank">Furukawa and Leucht (2011)</a> paper for further information:</p>
+	<table align="center" >
+		<tr>
+			<td style="text-align:center;"><b>Cohen's d</b></td>
+			<td style="text-align:center;"><b>Number Needed to Treat (NNT)</b></td>
+		</tr>
+		<tr>
+			<td style="text-align:center" ><input id="nntd1" style="text-align:center; width:100px;" onkeyup="nnt()" value=""></td>	
+			<td style="text-align:center" ><input id="nntd2" style="text-align:center; width:100px;" onkeyup="besd()" value="" readonly disabled></td>
+		</tr>
+	</table>
+		<br><br>
+	</div>
+	<br>
+	
+	
+	
+	
+	
+<a name="riskratio"></a>
+
+<button class="accordion">9. Risk Ratio, Odds Ratio and Risk Difference</button>
+<div class="panel">	<br><br>
+<p>Studies, investigating if specific incidences occur (e. g. death, healing, academic success ...) on a binary basis (yes versus no), and if two groups differ in respect to these incidences, usually Odds Ratios, Risk Ratios and Risk Differences are used to quantify the differences between the groups (Borenstein et al. 2009, chap. 5). These forms of effect size are therefore commonly used in clinical research and in epidemiological studies:
+<ul>
+	<li>The <b><i>Risk Ratio</i></b> is the quotient between the risks, resp. probabilities for incidences in two different groups. The risk is computed by dividing the number of incidences by the total number in each group and building the ratio between the groups.</li>
+	<li>The <b><i>Odds Ratio</i></b> is comparable to the relative risk, but the number of incidences is not divided by the total number, but by the counter number of cases. If f. e. 10 persons die in a group and 90 survive, than the odds in the groups would be 10/90, whereas the risk would be 10/(90+10). The odds ratio is the quotient between the odds of the two groups. Many people find Odds Ratios less intuitive compared to risk ratios and if the incidence is uncommon, both measures are roughly comparable. The Odds Ratio has favorable statistical properties which makes it attractive for computations and is thus frequently used in meta analytic research. <i>Yule's Q</i> - a measure of association - transforms Odds Ratios to a scale ranging from -1 to +1.</li>
+	<li>The <b><i>Risk Difference</i></b> is simply the difference between two risks. Compared to the ratios, the risks are not divided but subtracted from each other. For the computation of Risk Differences, only the raw data is used, even when calculating variance and standard error. The measure has a disadvantage: It is highly influenced by changes in base rates.</li>
+</ul>
+When doing meta analytic research, please use Log<sub>RiskRatio</sub> or Log<sub>OddsRatio</sub> when aggregating data and delogarithmize the sum finally. 
+</p>
+
+<table align="center" width=50%>
+	<tr>
+		<td width=100px></td>
+		<td style="text-align:center;" width=120px><b>Incidence</b></td>
+		<td style="text-align:center;" width=120px><b>no Incidence</b></td>
+		<td style="text-align:center;" width=120px><b>N</b></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Treatment</b></td>
+		<td><input id="rr_or_a" style="text-align:center; width:120px;" onkeyup="relativerisk()" value=""></td>
+		<td><input id="rr_or_b" style="text-align:center; width:120px;" onkeyup="relativerisk()" value=""></td>
+		<td width=100px><input id="rr_or_n1" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Control</b></td>
+		<td><input id="rr_or_c" style="text-align:center; width:120px;" onkeyup="relativerisk()" value=""></td>
+		<td><input id="rr_or_d" style="text-align:center; width:120px;" onkeyup="relativerisk()" value=""></td>
+		<td width=100px><input id="rr_or_n2" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+	<tr><td colspan=4 valign=bottom>
+	<br>
+</td></tr>
+	<tr>
+		<td></td>
+		<td style="text-align:center;" width=120px><b>Risk Ratio</b></td>
+		<td style="text-align:center;" width=120px><b>Odds Ratio</b></td>
+		<td style="text-align:center;" width=120px><b>Risk Difference</b></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;"><b>Result</b></td>
+		<td><input id="relativerisk" style="text-align:center; width:120px;" readonly disabled></td>
+		<td><input id="oddsratio" style="text-align:center; width:120px;" readonly disabled></td>
+		<td><input id="riskdifference" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;"><b>Log</b></td>
+		<td><input id="logrelativerisk" style="text-align:center; width:120px;" readonly disabled></td>
+		<td><input id="logoddsratio" style="text-align:center; width:120px;" readonly disabled></td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;"><b>Estimated Variance <i>V</i></b></td>
+		<td><input id="vlogrelativerisk" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>V<sub>LogRiskRatio</sub></small></b></center></td>
+		<td><input id="vlogoddsratio" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>V<sub>LogOddsRatio</sub></small></b></center></td>
+		<td><input id="vriskdifference" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>V<sub>RiskDifference</sub></small></b></center></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;"><b>Estimated Standard Error <i>SE</i></td>
+		<td><input id="selogrelativerisk" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>SE<sub>LogRiskRatio</sub></small></b></center></td>
+		<td><input id="selogoddsratio" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>SE<sub>LogOddsRatio</sub></small></b></center></td>
+		<td><input id="seriskdifference" style="text-align:center; width:120px;" readonly disabled><br><center><small><i>SE<sub>RiskDifference</sub></small></b></center></td>
+	</tr>
+	<tr>
+		<td style="text-align:center;"><b><i>Yule's Q</i></b></td>
+		<td></td>
+		<td><input id="yule" style="text-align:center; width:120px;" readonly disabled></td>
+		<td></td>
+	</tr>
+	</table></center>
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+
+<a name="cohenq"></a>
+
+<button class="accordion">10. Effect size for the difference between two correlations</button>
+<div class="panel">	<br><br>
+<p>Cohen (1988, S. 109) suggests an effect size measure with the denomination <i>q</i> that permits to interpret the difference between two correlations. The two correlations are transformed with Fisher's Z and subtracted afterwards. Cohen proposes the following categories for the interpretation: <.1: no effect; .1 to .3: small effect; .3 to .5: intermediate effect; >.5: large effect.</p>
+
+
+<table align="center" width=50%>
+	<tr>
+		<td style="text-align:right;"><b>Correlation r<sub>1</sub></b></td>
+		<td><input id="r1_q" style="text-align:center; width:120px;" onkeyup="cohenq()" value=""></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Correlation r<sub>2</sub></b></td>
+		<td><input id="r2_q" style="text-align:center; width:120px;" onkeyup="cohenq()" value=""></td>
+	</tr>
+	
+		<tr>
+		<td style="text-align:right;"><b>Cohen's <i>q</i></b></td>
+		<td><input id="cohenq" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Interpretation</b></td>
+		<td><input id="interpretationq" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+</table>	
+<br>	
+	<p>Especially in meta analytic research, it is often necessary to average correlations or to perform significance tests on the difference between correlations. Please have a look at our page <a href="correlation.html">Testing the Significance of Correlations</a> for on-line calculators on these subjects.</p>
+	<br><br>
+	</div>
+	<br>
+	
+	
+	
+	
+	
+	
+
+<a name="nonparametric"></a>
+
+<button class="accordion">11. Effect size calculator for non-parametric tests: Mann-Whitney-U, Wilcoxon-W and Kruskal-Wallis-H</button>
+<div class="panel">	<br><br>
+<p>Most statistical procedures like the computation of <i>Cohen's d</i> or <i>eta;<small><sup>2</sup></small></i> at least interval scale and distribution assumptions are necessary. In case of categorical or ordinal data, often non-parametric approaches are used - in the case of statistical tests for example Wilcoxon or Mann-Whitney-U. The distributions of the their test statistics are approximated by normal distributions and finally, the result is used to assess significance. Accordingly, the test statistics can be transformed in effect sizes (comp. Fritz, Morris & Richler, 2012, p. 12; Cohen, 2008). Here you can find an effect size calculator for the test statistics of the Wilcoxon signed-rank test, Mann-Whitney-U or Kruskal-Wallis-H in order to calculate <i>&eta;<small><sup>2</sup></small></i>. You alternatively can directly use the resulting z value as well:</p>
+
+
+<table align="center" width=50%>
+	<tr>
+		<td style="text-align:right;"><b>Test</b></td>
+		<td><select id="nonpar" name="type" onChange="nonparametric()"><option value="---">---</option><option value="Mann-Whitney-U">Mann-Whitney-U</option><option value="Wilcoxon-W">Wilcoxon-W</option><option value="kruskal">Kruskal-Wallis-H</option><option value="z">z</option></select></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><div  id="nonpar_statistic"><b>Test statistics <small><sup>*</sup></small></b></div></td>
+		<td><input id="nonparamTest" style="text-align:center; width:120px;" onkeyup="nonparametric()" value="" disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><div  id="nonpar_n1_text"><b>n<small><sub>2</sub></small></b></div></td>
+		<td><input id="nonparamN1" style="text-align:center; width:120px;" onkeyup="nonparametric()" value="" disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><div  id="nonpar_n2_text"><b>n<small><sub>2</sub></small></b></div></td>
+		<td><input id="nonparamN2" style="text-align:center; width:120px;" onkeyup="nonparametric()" value="" disabled></td>
+	</tr>
+	
+		<tr>
+		<td style="text-align:right;"><b>Eta squared (<i>&eta;<small><sup>2</sup></small></i>)</b></td>
+		<td><input id="nonparamEta" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>d<small><sub>Cohen</sub><sup>**</sup></small></i></b></td>
+		<td><input id="nonparamCohen" style="text-align:center; width:120px;" readonly disabled></td>
+	</tr>
+</table><br>
+<br><p><small><sup>*</sup> Note: Please do not use the sum of the ranks but instead directly type in the test statistics U, W or z from the inferential tests. As Wilcoxon relies on dependent data, you only need to fill in the total sample size. For Kruskal-Wallis please as well specify the total sample size and the number of groups. For z, please fill in the total number of observations (either the total sample size in case of independent tests or for dependent measures with single groups the number of individuals multiplied with the number of assessments; many thanks to Helen Askell-Williams for pointing us this aspect).</small></p>
+<p><small><sup>**</sup> Transformation of <i>&eta;<sup>2</sup></i> is done with the formulas of <a href="#transform">14. Transformation of the effect sizes d, r, f, Odds Ratio and &eta;<sup>2</sup></a>.</small></p>
+	<br><br>
+	</div>
+	<br>
+
+
+<a name="beta"></a>
+
+<button class="accordion">12. Imputation of <i>r</i> from standardized <i>&beta;</i> weights from multiple regression analysis</button>
+<div class="panel">	<br><br>
+<p>Studies based on regression analysis are hard to include in meta analytic research, if they only report standardized &beta; coefficients. It is debated, if an imputation is possible and advisable in this case. On the other hand, power of the analyses is reduced if to many studies cannot be included, which itself distorts the representativeness of the results. Peterson and Brown (2005) suggest a procedure for converting standardized &beta; weights to r, if the &beta; weights range between -0.5 and 0.5. <i>r</i> can then be used directly as an effect size or converted into d or other metrices. Peterson and Brown (2005, p. 180) conclude: "However, despite the potential usefulness of the proposed imputation approach, meta-analysts are still encouraged to make every effort to obtain original correlation coefficients."</p>
+
+	<table align="center">
+	
+		<tr>
+			<td style="text-align:center; width:250px;"><b>Standardized &beta; weight</b></td>
+			<td style="text-align:center; width:250px;"><b>r</b></td>
+		</tr>
+		
+		<tr>
+			<td><input id="beta1" style="text-align:center; width:250px;" onkeyup="beta()" value=""></td>
+			<td colspan=2  style="text-align:center;"><input id="beta2" style="text-align:center; width:250px;" value="" readonly disabled></td>
+		</tr>
+	</table>
+	<br><br>
+	</div>
+	<br>
+
+
+
+<a name="pool"></a>
+
+<button class="accordion">13. Computation of the pooled standard deviation</button>
+<div class="panel">	<br><br>
+<p>In order to compute Cohen's <i>d</i> and for other purposes, it is necessary to determine the mean (pooled) standard deviation. Here, you will find a small tool that does this for you. Different sample sizes are corrected as well and you can include up to 10 groups. Please specify the number before doing the calculation. If a value for the sample size is missing, the calculator only uses <i>sd</i> and does not correct for sample size.</p>
+
+	<table align="center">
+		
+		<tr>
+			<td style="text-align:right; width:250px;"><b>Number of Groups</b> 
+			<select id="pool_drop" name="type" onChange="displayPool()" width="100px">
+					<option value="---">---</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
+			</td>
+			<td style="text-align:center;"><b>Standard Deviation (sd)</b></td>
+			<td style="text-align:center;"><b>Sample Size (n)</b></td>
+		</tr>
+		
+		<tr>
+			<td id="poolRow1" style="text-align:right; width:250px;"><b>Group 1</b></td>
+			<td><input id="s1_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n1_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td id="poolRow2" style="text-align:right; width:250px;"><b>Group 2</b></td>
+			<td><input id="s2_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n2_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool3">
+			<td id="poolRow3" style="text-align:right; width:250px;"><b>Group 3</b></td>
+			<td><input id="s3_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n3_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool4">
+			<td id="poolRow4" style="text-align:right; width:250px;"><b>Group 4</b></td>
+			<td><input id="s4_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n4_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool5">
+			<td id="poolRow5" style="text-align:right; width:250px;"><b>Group 5</b></td>
+			<td><input id="s5_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n5_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool6">
+			<td id="poolRow6" style="text-align:right; width:250px;"><b>Group 6</b></td>
+			<td><input id="s6_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n6_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool7">
+			<td id="poolRow7" style="text-align:right; width:250px;"><b>Group 7</b></td>
+			<td><input id="s7_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n7_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool8">
+			<td id="poolRow8" style="text-align:right; width:250px;"><b>Group 8</b></td>
+			<td><input id="s8_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n8_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool9">
+			<td id="poolRow9" style="text-align:right; width:250px;"><b>Group 9</b></td>
+			<td><input id="s9_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n9_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+
+		<tr style="display:none;" id="pool10">
+			<td id="poolRow10" style="text-align:right; width:250px;"><b>Group 10</b></td>
+			<td><input id="s10_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+			<td><input id="n10_pool" style="text-align:center; width:100px;" onkeyup="pool()" value=""></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align:right;"><b>Pooled Standard Deviation <i>s<sub>pool</sub></i></b></td>
+			<td colspan=2  style="text-align:center;"><input id="pool" style="text-align:center; width:100px;" value="" readonly disabled></td>
+		</tr>
+	</table>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+
+<a name="transform"></a>
+
+<button class="accordion">14. Transformation of the effect sizes <i>d</i>, <i>r</i>, <i>f</i>, <i>Odds Ratio</i>, <i>&eta;<sup>2</sup></i> and <i>Common Language Effect Size (CLES)</i></button>
+<div class="panel">	<br><br>
+<p>Please choose the effect size, you want to transform, in the drop-down menu. Specify the magnitude of the effect size in the text field on the right side of the drop-down menu afterwards. The transformation is done according to Cohen (1988), Rosenthal (1994, S. 239), Borenstein, Hedges, Higgins, and Rothstein (2009; transformation of d in Odds Ratios) and Dunlap (1994; transformation in CLES).</p>
+
+<table align="center" width=70%>
+	<tr>
+		<td style="text-align:right;"><b>Effect Size</b></td>
+		<td><select id="effect_drop" name="type" onChange="transform()"><option value="---">---</option><option value="d">d</option><option value="r">r</option><option value="eta">Eta Square</option><option value="f">f</option><option value="odd">Odds Ratio</option></select></td>
+		<td><input id="effect" style="text-align:center; width:80px;" onkeyup="transform()" value=""></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>d</b></td>
+		<td  style="text-align:center;" colspan=2><input id="effect_d" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+ 
+ 	<tr>
+		<td style="text-align:right;"><b>r</b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_r" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>&eta;<sup>2</sup></b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_eta" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>f</b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_f" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>Odds Ratio</b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_odd" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Common Language Effect Size <i>CLES</i></b></td>
+		<td colspan=2  style="text-align:center;"><input id="cles3" style="text-align:center; width:100px;" value="" readonly disabled></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>Number Needed to Treat (NNT)</b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_nnt" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+</table>		
+<small style="text-align:center;">Remark: Please consider the additional explanations concerning the transform from d to Number Needed to Treat in the section <a href="#nntconv">BESD and NNT</a>. The conversion into CLES is based on <i>r</i> with the formula specified by Dunlap (1994): <math xmlns="http://www.w3.org/1998/Math/MathML">
+
+		<mi>CLES</mi><mo>=</mo><mfrac><mi>arcsin<mfenced>(r)</mfenced></mi><mrow>&Pi;</mrow></mfrac><mo>+</mo><mi>.5</mi>
+	
+	</math></small>
+
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+
+
+<a name="transform2"></a>
+
+<button class="accordion">15. Computation of the effect sizes <i>d</i>, <i>r</i> and <i>&eta;<sup>2</sup></i> from <i>&chi;<sup>2</sup></i>- and <i>z</i> test statistics</button>
+<div class="panel">	<br><br>
+<p>The <i>&chi;<sup>2</sup></i> and <i>z</i> test statistics from hypothesis tests can be used to compute <i>d</i> and <i>r</i>(Rosenthal & DiMatteo, 2001, p. 71; comp. Elis, 2010, S. 28). The calculation is however only correct for <i>&chi;<sup>2</sup></i> tests with one degree of freedom. Please choose the tests static measure from the drop-down menu and specify the value and N. The transformation from d to r and &eta;<sup>2</sup> is based on the formulas used in <a href="#transform">the prior section (13)</a>.</p>
+
+<table align="center" width=50%>
+	<tr>
+		<td style="text-align:right;"><b>Test Statistic</b></td>
+		<td><select id="effect_drop2" name="type" onChange="transform2()"><option value="---">---</option><option value="chi">Chi-Square</option><option value="z">z</option></select></td>
+		<td><input id="effect2" style="text-align:center; width:80px;" onkeyup="transform2()" value=""></td>
+	</tr>
+
+	<tr>
+		<td style="text-align:right;"><b>N</b></td>
+		<td  style="text-align:center;" colspan=2><input id="transform2N" style="text-align:center; width:80px;" onkeyup="transform2()"  value="" ></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>d</b></td>
+		<td  style="text-align:center;" colspan=2><input id="effect_d2" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+ 
+ 	<tr>
+		<td style="text-align:right;"><b>r</b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_r2" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:right;"><b>&eta;<sup>2</sup></b></td>
+		<td style="text-align:center;" colspan=2><input id="effect_eta2" style="text-align:center; width:80px;" value="" readonly disabled></td>
+	</tr>
+	
+</table>	
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+
+<a name="interpretation"></a>
+
+<button class="accordion">16. Table of interpretation for different effect sizes</button>
+<div class="panel"><br><br>	
+<p>Here, you can see the suggestions of Cohen (1988) and Hattie (2009 S. 97) for interpreting the magnitude of effect sizes. Hattie refers to real educational contexts and therefore uses a more benignant classification, compared to Cohen. We slightly adjusted the intervals, in case, the interpretation did not exactly match the categories of the original authors.</p>
+
+<table align="center" width=80%>
+	<tr>
+		<td style="text-align:center; width:80px;"><b>d</b></td>
+		<td style="text-align:center; width:80px;"><b>r<sup>*</sup></b></td>
+		<td style="text-align:center; width:80px;"><b>&eta;<sup>2</sup></td>
+		<td style="text-align:center; width:80px;"><b>Interpretation sensu Cohen (1988)</b></td>
+		<td style="text-align:center; width:80px;"><b>Interpretation sensu Hattie (2009)</b></td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">< 0</td>
+		<td style="text-align:center;">< 0</td>
+		<td style="text-align:center;">-</td>
+		<td colspan = 2 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Adverse Effect</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.0</td>
+		<td style="text-align:center;">.00</td>
+		<td style="text-align:center;">.000</td>
+		<td rowspan = 2 style="text-align:center;border: 1px solid rgb(187, 187, 187);">No Effect</td>
+		<td rowspan = 2 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Developmental effects</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.1</td>
+		<td style="text-align:center;">.05</td>
+		<td style="text-align:center;">.003</td>
+	</tr>
+
+	<tr>
+		<td style="text-align:center;">0.2</td>
+		<td style="text-align:center;">.10</td>
+		<td style="text-align:center;">.010</td>
+		<td rowspan = 3 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Small Effect</td>
+		<td rowspan = 2 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Teacher effects</td>
+	</tr>
+	
+		<tr>
+		<td style="text-align:center;">0.3</td>
+		<td style="text-align:center;">.15</td>
+		<td style="text-align:center;">.022</td>
+	</tr>
+	
+		<tr>
+		<td style="text-align:center;">0.4</td>
+		<td style="text-align:center;">.2</td>
+		<td style="text-align:center;">.039</td>
+		<td rowspan = 7 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Zone of desired effects</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.5</td>
+		<td style="text-align:center;">.24</td>
+		<td style="text-align:center;">.060</td>
+		<td rowspan = 3 style="text-align:center;border: 1px solid rgb(187, 187, 187);">Intermediate Effect</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.6</td>
+		<td style="text-align:center;">.29</td>
+		<td style="text-align:center;">.083</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.7</td>
+		<td style="text-align:center;">.33</td>
+		<td style="text-align:center;">.110</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.8</td>
+		<td style="text-align:center;">.37</td>
+		<td style="text-align:center;">.140</td>
+		<td rowspan = 3 style="text-align:center; border: 1px solid rgb(187, 187, 187);">Large Effect</td>
+	</tr>
+	
+	<tr>
+		<td style="text-align:center;">0.9</td>
+		<td style="text-align:center;">.41</td>
+		<td style="text-align:center;">.168</td>
+	</tr>
+
+	<tr>
+		<td style="text-align:center;"> &ge; 1.0</td>
+		<td style="text-align:center;">.45</td>
+		<td style="text-align:center;">.200</td>
+	</tr>	
+	
+</table>
+
+
+
+
+
+
+<br>
+<small><sup>*</sup> Cohen (1988) reports the following intervals for r: .1 to .3: small effect; .3 to .5: intermediate effect; .5 and higher: strong effect</small><br>
+</small>
+	<br><br>
+	</div>
+	<br>
+
+
+
+
+
+
+
+<button class="accordion">Literature</button>
+<div class="panel">	<br><br>
+<p>Borenstein (2009). Effect sizes for continuous data. In H. Cooper, L. V. Hedges, & J. C. Valentine (Eds.), <i>The handbook of research synthesis and meta analysis (pp. 221-237)</i>. New York: Russell Sage Foundation.</p>
+<p>Borenstein, M., Hedges, L. V., Higgins, J. P. T., & Rothstein, H. R. (2009). <a href="http://www.meta-analysis.com/downloads/Meta-analysis%20Converting%20among%20effect%20sizes.pdf" target="_blank">Introduction to Meta-Analysis, Chapter 7: Converting Among Effect Sizes </a>. Chichester, West Sussex, UK: Wiley.</p>
+<p>Cohen, J. (1988). <i>Statistical power analysis for the behavioral sciences (2. Auflage)</i>. Hillsdale, NJ: Erlbaum.</p>
+<p>Cohen, B. (2008). <i>Explaining psychological statistics (3rd ed.)</i>. New York: John Wiley & Sons.</p>
+<p>Dunlap, W. P. (1994). Generalizing the common language effect size indicator to bivariate normal correlations. <i>Psychological Bulletin, 116(3)</i>, 509-511. doi: 10.1037/0033-2909.116.3.509</p>
+<p>Dunlap, W. P., Cortina, J. M., Vaslow, J. B., & Burke, M. J. (1996). Meta-analysis of experiments with matched groups or repeated measures designs. <i>Psychological Methods, 1</i>, 170-177.</p>
+<p>Elis, P. (2010). <i>The Essential Guide to Effect Sizes: Statistical Power, Meta-Analysis, and the Interpretation of Research Results</i>. Cambridge: Cambridge University Press.</p> 
+<p>Fritz, C. O., Morris, P. E., & Richler, J. J. (2012). Effect size estimates: Current use, calculations, and interpretation. <i>Journal of Experimental Psychology: General, 141(1)</i>, 2-18. https://doi.org/10.1037/a0024338
+</p>
+<p>Furukawa, T. A., & Leucht, S. (2011). How to obtain NNT from Cohen's d: comparison of two methods. <i>PloS one, 6</i>, e19070.</p>
+<p>Hattie, J. (2009). <i>Visible Learning</i>. London: Routledge.</p>
+<p>Hedges, L. & Olkin, I. (1985). <i>Statistical Methods for Meta-Analysis</i>. New York: Academic Press.</p>
+<p>Klauer, K. J. (2001). <i>Handbuch kognitives Training</i>. Göttingen: Hogrefe.</p>
+<p>McGraw, K. O., & Wong, S. P. (1992). A common language effect size statistic. <i>Psychological bulletin, 111(2)</i>, 361-365.</p>
+<p>Morris, S. B., & DeShon, R. P. (2002). <a href="https://www.researchgate.net/profile/Brent_Roberts/publication/7337585_Patterns_of_mean-level_change_in_personality_traits_across_the_life_course_a_meta-analysis_of_longitudinal_studies/links/00b7d53c23b35d61aa000000.pdf" target="_blank">Combining effect size estimates in meta-analysis with repeated measures and independent-groups designs</a>. <i>Psychological Methods, 7(1)</i>, 105-125. https://doi.org/10.1037//1082-989X.7.1.105</p>
+<p>Morris, S. B. (2008). <a href="http://orm.sagepub.com/content/11/2/364.abstract" target="_blank">Estimating Effect Sizes From Pretest-Posttest-Control Group Designs</a>. <i>Organizational Research Methods, 11(2)</i>, 364-386. http://doi.org/10.1177/1094428106291059</p>
+<p>Peterson, R. A., & Brown, S. P. (2005). On the use of beta coefficients in meta-analysis. <i>The Journal of Applied Psychology, 90 </i>(1), 175-181. https://doi.org/10.1037/0021-9010.90.1.175</p>
+<p>Rosenthal, R. (1994). Parametric measures of effect size. In H. Cooper & L. V. Hedges (Eds.), <i>The Handbook of Research Synthesis</i> (231-244). New York, NY: Sage.</p>
+<p>Rosenthal, R. & DiMatteo, M. R. (2001). Meta-Analysis: Recent Developments in Quantitative Methods for Literature Reviews. <i>Annual Review of Psychology, 52(1)</i>, 59-82. doi:10.1146/annurev.psych.52.1.59</p>
+<p>Thalheimer, W., & Cook, S. (2002, August). How to calculate effect sizes from published research articles: A simplified methodology. Retrieved March 9, 2014 from <a href="http://work-learning.com/effect_sizes.htm">http://work-learning.com/effect_sizes.htm</a>.</p>
+
+	</div><br><br>
+<p>In case you need a reference to this page in a scientific paper, please use the following citation:
+<blockquote>
+Lenhard, W. & Lenhard, A. (2016). <i>Calculation of Effect Sizes</i>. Retrieved from: <a href="https://www.psychometrica.de/effect_size.html">https://www.psychometrica.de/effect_size.html</a>. Dettelbach (Germany): Psychometrica. DOI: 10.13140/RG.2.2.17823.92329
+</blockquote>
+</p> 
+<br><br>
+</div>
+</div>
+	
+
+
+
+<div id="footer">
+<p>Copyright &copy; 2017 - 2020 Drs. Alexandra &amp; Wolfgang Lenhard</p>
+
+</div>
+
+
+</div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+</body>
+</html>
