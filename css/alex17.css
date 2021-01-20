@@ -1,0 +1,92 @@
+/* alex17 - layout by Alexandra Lenhard*/
+
+body {background:url(../img/bg.png) repeat-y top center #eaeaea; color:#3a3a3a; font:76% Verdana,Tahoma,Arial,sans-serif; margin:0 auto; padding:0;}
+
+/* Main layout and header */
+#wrap {background:#ffffff; color:#303030; margin:0 auto; width:960px;}
+#header {background:url(../img/header.png) no-repeat bottom left #ffffff; color:#505050; height:163px; margin:0 0 10px; padding:0;}
+#header h1 {font-size:2.5em; font-weight:400; letter-spacing:-2px; margin:0 0 4px 15px; padding:15px 0 0;}
+#header h1 a,#header h1 a:hover {font-weight:400; padding:0;}
+#header p {font-size:1.1em; letter-spacing:-1px; margin:0 0 20px 15px; padding:0 0 0 3px;}
+
+/* Left sidebar and menu */
+#leftside {clear:left; float:left; margin:0px 20px 10px 0px; padding:0; width:220px;}
+#leftside ul.avmenu {list-style:none; margin:0 20px 18px; padding:0; width:220px;}
+#leftside ul.avmenu li {display:inline; padding:0; width:220px;}
+#leftside ul.avmenu li a {background:#ffffff; border-bottom:3px solid #aaaaaa; border-left:3px solid #aaaaaa; border-right:1px solid #d8d8d8; border-top:1px solid #d8d8d8; color:#505050; float:left; font-size:1em; font-weight:700; margin-bottom:5px; padding:5px 1px 5px 5px; text-decoration:none; width:180px;}
+#leftside ul.avmenu li a:hover,#leftside ul.avmenu li a.current {background:#ececec; border-bottom:3px solid #848484; border-left:3px solid #848484; border-right:1px solid #b4b4b4; border-top:1px solid #b4b4b4; color:#505050;}
+#leftside ul.avmenu ul {font-size:0.9em; margin:0 0 0 20px; padding:0 0 5px 0; width:180px;}
+#leftside ul.avmenu ul a {padding:3px 0px 3px 5px; width:160px;}
+#leftside ul.avmenu ul ul {font-size:0.95em; width:140px;}
+#leftside ul.avmenu ul ul a {width:140px;}
+#leftside h2 {font-size:1.5em; font-weight:400;}
+
+#leftside .announce {background:#ffffff; border-bottom:3px solid #aaaaaa; border-left:3px solid #aaaaaa; border-right:1px solid #d8d8d8; border-top:1px solid #d8d8d8; clear:left; color:#505050; line-height:1.3em; margin:10px 0; padding:5px 5px 5px 5px; width:134px;}
+#leftside p,.announce p {font-size:0.9em;}
+
+/* Right sidebar */
+#extras {float:right; margin:0 0 10px; padding:0; width:140px;}
+#extras p,#extras ul {font-size:0.9em; line-height:1.3em; margin:0 0 1.5em; padding:0;}
+#extras li {list-style:none; margin:0 0 6px; padding:0;}
+#extras h2 {font-size:1.6em; font-weight:400; letter-spacing:-1px; margin:0 0 6px;}
+
+/* Main content variations */
+#content {line-height:1.5em; margin:0px 200px 20px 200px; padding:0; text-align:left;}
+#contentstart {margin:10px 50px 10px 60px; padding:0; text-align:left;}
+#startlink {background:#ececec; border-bottom:3px solid #848484; border-left:3px solid #848484; border-right:1px solid #b4b4b4; border-top:1px solid #b4b4b4; color:#505050}
+#contentwide {line-height:1.5em; margin:0px 30px 10px 250px; padding:0; text-align:left;}
+#contentcenter {line-height:1.5em; margin:0px 150px 10px 200px; padding:0; text-align:left;}
+#content h2,#contentwide h2, #contentcenter h2 {font-size:1.8em; font-weight:400; letter-spacing:-1px; margin:0px 0 10px; padding:0; line-height: 1.1em;}
+#content h3,#contentwide h3, #contentcenter h3 {font-size:1.6em; font-weight:400; margin:0px 0 20px; padding:0;}
+#content h4,#contentwide h4, #contentcenter h4 {font-size:1.4em; font-weight:200; margin:12px 0; padding:0;}
+#content img,#contentwide img, #contentcenter img {background:white; border:0px solid white; display:inline; padding:1px; margin:0 10px 5px 0;}
+#content ul,#content ol,#contentwide ul,#contentwide ol, #contentcenter ul, #contentcenter ol {margin:0 0 16px 20px; padding:0;}
+#content ul ul,#content ol ol,#contentwide ul ul,#contentwide ol ol, #contentcenter ul ul, #contentcenter ol ol {margin:2px 0 2px 20px;}
+#content li,#contentwide li, #contentcenter li {margin:0 0 2px 10px; padding:0 0 0 4px;}
+ 
+
+/* Footer */
+#footer {background:#ffffff; border-top:2px solid #aaaaaa; clear:both; color:gray; font-size:0.9em; margin:0 auto; padding:8px 0; text-align:center; width:960px;}
+#footer p {margin:0; padding:0;}
+#footer a {background:inherit; color:gray; font-weight:400; text-decoration:none;}
+#footer a:hover {text-decoration:underline;}
+
+/* Links and paragraphs */
+a {background:inherit; color:#5B969D; text-decoration:none; font-weight:700;}
+a:hover {background:inherit; color:#286ea0; text-decoration:underline;}
+#startleiste a {color:#ffffff; text-decoration:none; font-weight:700;}
+#startleiste a:hover {color:#ffffff; text-decoration:underline; font-weight:700;}
+a img {border:0;}
+p {margin:0 0 16px;}
+blockquote {background:url(../img/menubg.gif) repeat-x bottom left #f4f4f4; border-bottom:1px solid #d8d8d8; border-left:4px solid #ccc; border-right:1px solid #d8d8d8; border-top:1px solid #d8d8d8; color:#505050; margin:16px; padding:7px 7px 7px 11px;}
+blockquote p {font-size:1.1em; line-height:1.3em; margin:0;}
+
+/* Tables and forms */
+caption {font-size:1.5em; font-weight:400; margin:0; padding:6px 0 8px; text-align:left;}
+input,textarea {border:1px solid #ccc; font-family:Verdana,Tahoma,Arial,Sans-Serif; font-size:1em; margin:0; padding:4px;}
+td {font-size:0.9em;}
+label {margin:2px;}
+input {width:200px;}
+textarea {width:400px;}
+#cell {background:url(../img/menubg.gif) repeat-x bottom left #f4f4f4; color:#303030; font-size:0.9em; padding:5px; text-align:left;}
+#contenttable td{background:url(../img/menubg.gif) repeat-x bottom left #f4f4f4; padding:5px; text-align:left;}
+#downloadtable {margin: 0px 70px 0px;}
+#downloadtable td{background:url(../img/menubg.gif) repeat-x bottom left #f4f4f4; padding:5px; text-align:left;}
+
+
+/* Search box */
+#searchbox label,.hide {display:none;}
+#searchbox {margin:6px 0 16px; padding:0;}
+#searchform {background:#fff; border:1px solid #ccc; color:#505050; font-size:0.9em; padding:4px; width:198px;font-size:0.9em;}
+
+/* Various classes */
+.announce h2 {margin:0 0 10px; padding:0;}
+.textright {margin:-10px 0 4px; text-align:right;}
+.center {text-align:center;}
+.small {font-size:0.8em;}
+.large {font-size:1.3em;}
+.highlighted {background:#f0f0f0; border:1px solid #b0b0b0; color:#303030; padding:3px;}
+.remark {color:gray; font-size:0.8em}
+.button {background:url(../img/menubg.gif) repeat-x bottom left #f4f4f4; border-bottom:1px solid #d8d8d8; border-left:4px solid #ccc; border-right:1px solid #d8d8d8; border-top:1px solid #d8d8d8; color:#505050; font-weight:700; margin:0 0 15px; padding:7px 7px 7px 11px; width:120px;}
+.left {float:left; margin:10px 10px 5px 0;}
+.right {float:right; margin:10px 0 5px 10px;}
